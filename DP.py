@@ -1416,11 +1416,11 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
 
             pg.setConfigOptions(antialias=True, background='w', foreground='k')
-            self.mw = QtGui.QMainWindow()
+            self.mw = QMainWindow()
             self.gv = pg.GraphicsView()
 
             self.mw.setCentralWidget(self.gv)
-            self.l = QtGui.QGraphicsGridLayout()
+            self.l = QGraphicsGridLayout()
             self.l.setHorizontalSpacing(0)
             self.l.setVerticalSpacing(0)
             self.gv.centralWidget.setLayout(self.l)
@@ -1433,10 +1433,10 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
             # very important part of code
             # it connect the function to do the right thing for the event.
             # the event is from the signal defined in GraphicsView.py.
-            self.gv.sigMousePressed.connect(on_button_presspg)
+            # self.gv.sigMousePressed.connect(on_button_presspg)
             self.gv.sigMouseReleased.connect(on_button_releasepg)
             self.gv.sigSceneMouseMoved.connect(motion_notifypg)
-            self.gv.sigKeyPressed.connect(on_key_presspg)
+            # self.gv.sigKeyPressed.connect(on_key_presspg)
 
             startTime=float(self.xLeft.text())  # in ms
             endTime=float(self.xRight.text())
