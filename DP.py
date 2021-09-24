@@ -314,7 +314,7 @@ def on_key_press(event):
 
 
 
-        elif event.key is 'shift':
+        elif event.key == 'shift':
             showInfMode = 1
 
 
@@ -447,7 +447,7 @@ def on_button_release(event):
             event.key='u'
             on_key_press(event)
 
-        elif type is 11:
+        elif type == 11:
             # initialize the size
 
             plt.subplots_adjust(left=defaultPos[0], right=defaultPos[0]+defaultPos[2], bottom=defaultPos[1], top=defaultPos[1]+defaultPos[3], wspace=0.0, hspace=0.0)
@@ -458,7 +458,7 @@ def on_button_release(event):
 
             plt.setp(ha.get_xticklabels(), visible=True)
 
-        elif type is 12:  # only one axis
+        elif type == 12:  # only one axis
             bools_list = list(map(lambda x: x.contains_point((event.x, event.y)), hAxes))
             ind = bools_list.index(True)
             currentAxes= hAxes[ind]
@@ -582,21 +582,21 @@ def getGesture(trajectoryPointX, trajectoryPointY):
                 Nmin = min(Ns)  # where is less
                 offset = 4
 
-                if Nmin is N3:  # third  less
+                if Nmin == N3:  # third  less
                     index = 1
                     if X[0] > X[-1]:
                         type = index  # acw  first - quadrant
                     else:
                         type = offset + index  # cw  first - quadrant
 
-                elif Nmin is N4:
+                elif Nmin == N4:
                     index = 2
                     if X[0] > X[-1]:
                         type = index  # acw    second - quadrant
                     else:
                         type = offset + index;  # cw  second - quadrant
 
-                elif Nmin is N1:
+                elif Nmin == N1:
                     index = 3
 
                     if X[0] < X[-1]:
@@ -604,7 +604,7 @@ def getGesture(trajectoryPointX, trajectoryPointY):
                     else:
                         type = offset + index  # cw third - quadrant
 
-                elif Nmin is N2:
+                elif Nmin == N2:
                     index = 4
                     if X[0] < X[-1]:
                         type = index  # acw  fourth - quadrant
@@ -887,7 +887,7 @@ def on_button_releasepg(event):
 
 
 
-        elif type is 11: # to many axis
+        elif type == 11: # to many axis
             # initialize the size
             for ha in hPIs:
                 ha.show()
@@ -897,7 +897,7 @@ def on_button_releasepg(event):
             myScaleL = hPIs[-1].getAxis('bottom')
             myScaleL.setStyle(showValues=True)
 
-        elif type is 12:  # only one axis
+        elif type == 12:  # only one axis
             #  #%% the size is controlled by show and hide
             # myRect=hVBs[ind].screenGeometry()
             # myPos=hVBs[ind].pos()
@@ -1134,12 +1134,12 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except:
             self.Warning.append('machineTrigger' + ' or something wrong')
         else:
-            self.Warning.append('machineTrigger' +' is OK')
+            self.Warning.append('machineTrigger' +' == OK')
 
     def processTrigger(self, q):
         global drawMode
         myShot = self.shot.value()
-        if q.text() is 'setSystemName':
+        if q.text() == 'setSystemName':
 
             if self.mode == 0 or self.mode==1:
                 DPI.setSystemName(myShot)
@@ -1807,7 +1807,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
             stepTime=self.freqInterp.text()
             timeContext= str(startTime) + ':' + str(endTime) + ':' + str(stepTime)
 
-            if (showInfMode is 1):
+            if (showInfMode == 1):
                 if (self.mode==0 or self.mode==1 or self.mode==4):
                     self.Warning.clear()
                     currentSys = DPI.getSystemName(channelName)
@@ -1835,7 +1835,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.Warning.append('SparC1:' + myInf.SparC1)
                     self.Warning.append('SparC2:' + myInf.SparC2)
                     self.Warning.append('SparC3:' + myInf.SparC3)
-                    #           elif showInfMode is 0:
+                    #           elif showInfMode == 0:
             else:
                 if self.mode <2:
                     x, y, U = DPI.hl2adb(currentShot, channelName)
@@ -1846,7 +1846,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 elif self.mode==4:
                     x, y, U = DPI.hl2adb(currentShot, channelName)
 
-                if self.browserMode is 1:
+                if self.browserMode == 1:
                     # initialize the   15
 
                     self.Curves.addItem(str(currentShot) + '\\' + channelName)
@@ -1891,7 +1891,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.curveData.FraNum.append('0')
 
     def browserClicked(self):
-        if self.browserMode is 0:
+        if self.browserMode == 0:
             self.browserMode=1
             self.Browser.setText('Browser+Add')
             # self.Browser.setAutoFillBackground(True)
