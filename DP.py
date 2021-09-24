@@ -27,7 +27,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use("Qt5Agg")  # 声明使用QT5
+matplotlib.use("agg")  # 声明使用QT5
 
 if True:
     # global definition
@@ -1134,7 +1134,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except:
             self.Warning.append('machineTrigger' + ' or something wrong')
         else:
-            self.Warning.append('machineTrigger' +' == OK')
+            self.Warning.append('machineTrigger' +' is OK')
 
     def processTrigger(self, q):
         global drawMode
@@ -1674,6 +1674,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             if setMachineMode==1:  # select machine
                 machineName=self.Files.currentItem().text()
+                # note:file click to change machine
                 self.Channels.clear()  # Resets browser after file is selected
                 setMachineMode = 0  # exit the setMachineMode
                 if machineName == 'hl2a':
