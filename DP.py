@@ -1029,7 +1029,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if len(sys.argv)>1:
             self.mode = int(sys.argv[1])
         else:
-            self.mode = 2
+            self.mode = 0
 
 
         desktop = QtWidgets.QApplication.desktop()
