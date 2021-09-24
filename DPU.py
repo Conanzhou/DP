@@ -241,12 +241,12 @@ class Ui_MainWindow(object):
 
     def resizeDP(self, window):
         window.move(window.width() * -2, 0)  # 先将窗口放到屏幕外，可避免移动窗口时的闪烁现象。
-        desktop = QtWidgets.QApplication.desktop()
+        desktop = QtWidgets.QApplication.desktop().availableGeometry()
 
         Rows = 20
         Cols = 6
-        width = desktop.width() * 0.9
-        height = desktop.height() * 0.9
+        width = desktop.width()
+        height = desktop.height()
         if width > 2500:
             width = 1800
             height = 1000
