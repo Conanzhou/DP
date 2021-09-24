@@ -130,11 +130,11 @@ class Ui_MainWindow(object):
 
         # 水平布局
 
-        #      wid = QtGui.QWidget(self)
+        wid = QtGui.QWidget(self)
         # self.setCentralWidget(wid)
         # layout = QtGui.QHBoxLayout()
 
-        layout = QHBoxLayout()
+        layout = QHBoxLayout(wid)
         # 实例化主窗口的QMenuBar对象
         bar = self.menuBar()
         # 向菜单栏中添加新的QMenu对象，父菜单
@@ -163,8 +163,8 @@ class Ui_MainWindow(object):
         machine.triggered[QAction].connect(self.machineTrigger)
         help.triggered[QAction].connect(self.helpTrigger)
 
-        # wid.setLayout(layout)
-        self.setLayout(layout)
+        wid.setLayout(layout)
+        # self.setLayout(layout)
         self.setWindowTitle('menu例子')
 
         self.retranslateUi(MainWindow)
