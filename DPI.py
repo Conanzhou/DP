@@ -639,16 +639,19 @@ def setSystemName(myShot):
                 strSystemChnl = strSystemChnl + ';' + chnl + ';\n'
 
     if mode == 0:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile0.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile0.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile0.txt"
     elif mode == 1:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile1.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile1.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile1.txt"
     elif mode == 4:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile4.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile4.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile4.txt"
 
-    systemNameFile = open(SystemChnlFile, 'w')
+    systemNameFile = open(str(SystemChnlFile), 'w')
     n = systemNameFile.writelines(strSystemChnl)
     systemNameFile.close()
 
