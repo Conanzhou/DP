@@ -130,7 +130,7 @@ class Ui_MainWindow(object):
 
         # 水平布局
 
-        wid = QtGui.QWidget(self)
+        wid = QWidget(self)
         # self.setCentralWidget(wid)
         # layout = QtGui.QHBoxLayout()
 
