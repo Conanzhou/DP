@@ -14,13 +14,17 @@ import scipy.io as sio
 import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
+# TODO: 处理 Windows 和 Mac/Linux 文件路径差异
+from pathlib import Path 
 
 __all__ = ["exl50db", "hl2adb", "eastdb", "getChannelsInTree", "sct", "sctAD", "getDateTime"]
 
 # the DP subroutine
 # the default value for DP
 
-mode = 4  # 0=driver mode   0=hl2a,1=local, 2=exl50,3=east,4=hl2m
+# note: change machine
+mode = 1  # 0=driver mode   0=hl2a,1=local, 2=exl50,3=east,4=hl2m
+localdriver = Path.cwd() / "data"
 myStart = 0  # time window start
 myEnd = 10000  # time window end in second
 myFrq = 1  # interpolation or frequency
@@ -32,27 +36,30 @@ isLocalData = 0
 
 
 def getIpTree4Machine(machine):
-    if machine=='exl50':
+    if machine == 'exl50':
         IpAddress = '192.168.20.11'
         strTreeName = ['exl50']
-    elif machine=='east':
+    elif machine == 'east':
         IpAddress = 'mds.ipp.ac.cn'  # 202.127.204.12
         strTreeName = ['pcs_east', 'east', 'efitrt_east']
 
     return IpAddress, strTreeName
 
-def getDateTime(machine,shotNumber):
+
+def getDateTime(machine, shotNumber):
     IpAddress, strTreeName = getIpTree4Machine(machine)
     conn = Connection(IpAddress)
     CurrentChannel = 'ip'
     tree = conn.openTree(strTreeName[0], shotNumber)
 
     # strCMD = 'getnci("\\\\' + strTreeName[0] +  '::TOP:FBC:' + CurrentChannel + '","TIME_INSERTED")'
-    strCMD = 'DATE_TIME(getnci("\\\\' + strTreeName[0] + '::TOP:FBC:' + CurrentChannel + '","TIME_INSERTED"))'
+    strCMD = 'DATE_TIME(getnci("\\\\' + \
+        strTreeName[0] + '::TOP:FBC:' + CurrentChannel + '","TIME_INSERTED"))'
     strTime = conn.get(strCMD)
     conn.closeAllTrees()
     conn.disconnect()
     return strTime
+
 
 def getChannelsInTree(conn, tree, shotNumber, isSpecial):
     # isSpecial=1, with AD data and layer 3
@@ -64,16 +71,13 @@ def getChannelsInTree(conn, tree, shotNumber, isSpecial):
     Level_1 = 'getnci("\\' + Level_0 + '.*","FULLPATH")'
     # Level_1 = 'getnci("\\' + Level_0 + '.*","NODE_NAME")'
 
-
-
-
     try:
         Level_1s = conn.get(Level_1)
         Level_2s = []   # use for layer 4
         Levels = np.append(Level_1s, Level_0)
         if isSpecial == 1:
             for i in range(len(Level_1s)):
-                L1=Level_1s[i]
+                L1 = Level_1s[i]
                 L1 = re.sub(r'\s+', "", str(L1), count=0, flags=0)
                 Level_2 = 'getnci("\\' + L1 + '.*","FULLPATH")'
                 try:
@@ -93,31 +97,31 @@ def getChannelsInTree(conn, tree, shotNumber, isSpecial):
         pass
     # get variable names from mds
 
-
     for i in range(len(Levels)):
         mds_nam = Levels[i]
-        mds_nam=re.sub('\s+', "", mds_nam, count=0, flags=0)
+        mds_nam = re.sub('\s+', "", mds_nam, count=0, flags=0)
         # mdscmd = 'getnci("\\' + mds_nam + ':*","FULLPATH")'
         mdscmd = 'getnci("\\' + mds_nam + ':*","NODE_NAME")'
         try:
-            mychs=conn.get(mdscmd)  # get  variable  names from mds   end
+            mychs = conn.get(mdscmd)  # get  variable  names from mds   end
             for ii in range(len(mychs)):
                 if isSpecial == 1:
-                    pattern='TOP\.AI|TOP.MNT'
+                    pattern = 'TOP\.AI|TOP.MNT'
                     searchObj = re.search(pattern, mdscmd, re.I)
 
-                    if searchObj is None:
-                        mych=mychs[ii]
+                    if searchObj == None:
+                        mych = mychs[ii]
                     else:
-                        mych='AD' + mychs[ii]  # direct data acquisition
+                        mych = 'AD' + mychs[ii]  # direct data acquisition
                 else:
-                    mych=mychs[ii]
+                    mych = mychs[ii]
 
-                mych = re.sub('\s+', "", mych.value, count=0, flags=0)  # cancel the blank
-                patternrep=';' + mych +';'   # repitition
+                mych = re.sub('\s+', "", mych.value, count=0,
+                              flags=0)  # cancel the blank
+                patternrep = ';' + mych + ';'   # repitition
 
-                searchObj=re.search(patternrep,myChnlString,re.I)
-                if searchObj is None:
+                searchObj = re.search(patternrep, myChnlString, re.I)
+                if searchObj == None:
                     myChnlString = myChnlString + mych + ';'
                 else:
                     pass
@@ -143,22 +147,22 @@ def getChannelsInTree(conn, tree, shotNumber, isSpecial):
         # pattern = re.compile(r'[\w]*\Z')
         # channelNames = pattern.findall(channelNames)
 
-
         # index = ~cellfun( @ isempty, channelNames);
         # channelNames = channelNames(index);
 
     return myChnlString
 
-def sct(machine,shotNumber):
+
+def sct(machine, shotNumber):
 
     IpAddress, strTreeName = getIpTree4Machine(machine)
     conn = Connection(IpAddress)
-    myChnlString=''
+    myChnlString = ''
 
     for i in range(len(strTreeName)):
         tree = conn.openTree(strTreeName[i], shotNumber)
         myChnlString = myChnlString + ':' + strTreeName[i] + ':'
-        Chnl=getChannelsInTree(conn, strTreeName[i], shotNumber, 0)
+        Chnl = getChannelsInTree(conn, strTreeName[i], shotNumber, 0)
         myChnlString = myChnlString + Chnl
 
     conn.closeAllTrees()
@@ -169,16 +173,17 @@ def sct(machine,shotNumber):
 
     sio.savemat(treeChnlFile, {'myChnlString': myChnlString})
 
-def sctAD(machine,shotNumber):
+
+def sctAD(machine, shotNumber):
 
     IpAddress, strTreeName = getIpTree4Machine(machine)
     conn = Connection(IpAddress)
-    myChnlString=''
+    myChnlString = ''
 
     for i in range(len(strTreeName)):
         tree = conn.openTree(strTreeName[i], shotNumber)
         myChnlString = myChnlString + ':' + strTreeName[i] + ':'
-        Chnl=getChannelsInTree(conn, strTreeName[i], shotNumber, 1)
+        Chnl = getChannelsInTree(conn, strTreeName[i], shotNumber, 1)
         myChnlString = myChnlString + Chnl
 
     conn.closeAllTrees()
@@ -195,7 +200,7 @@ def exl50db(shotNumber, channelName, *args):
     mode = 2
 
     if isLocalData:
-        strTreeName=getTreeName(channelName)
+        strTreeName = getTreeName(channelName)
         # current shot :Tree.getCurrent('exl50')
         if len(args) == 1:
             timeWindow = args[0]
@@ -220,19 +225,19 @@ def exl50db(shotNumber, channelName, *args):
         #     x = n1.getData().dim_of()
 
         x = n1.getData().dim_of()
-        if type(x) is np.ndarray:
+        if type(x) == np.ndarray:
             pass
         else:
-            x=x.data()
+            x = x.data()
 
         y = n1.getData().value_of()
-        if type(y) is np.ndarray:
+        if type(y) == np.ndarray:
             pass
         else:
-            y=y.data()
+            y = y.data()
 
         myTree.close()
-        U='au'
+        U = 'au'
         return x, y, U  # s --> s
 
     else:
@@ -259,25 +264,25 @@ def dbs(serveName, shotNumber, channelName, *args):
             patternDigital = re.compile(r'[-\d\.]+')
             timeResults = patternDigital.findall(timeWindow)
 
-            timeContext='SetTimeContext(' + timeResults[0] + ',' + timeResults[1] + ',' + timeResults[2] +')'
+            timeContext = 'SetTimeContext(' + timeResults[0] + \
+                ',' + timeResults[1] + ',' + timeResults[2] + ')'
             conn.get(timeContext)
-
 
     x = conn.get(r"dim_of(\{})".format(channelName))
     y = conn.get(r"\{}".format(channelName))
     U = conn.get(r"units_of(\{})".format(channelName))
-    if type(x) is np.ndarray:
+    if type(x) == np.ndarray:
         pass
-    elif (type(x) is Float32Array) and (len(x) ==1):
-        x=x[0]
+    elif (type(x) == Float32Array) and (len(x) == 1):
+        x = x[0]
     else:
-        x=x.value
-    if type(y) is np.ndarray:
+        x = x.value
+    if type(y) == np.ndarray:
         pass
-    elif (type(y) is Float32Array) and (len(y) ==1):
+    elif (type(y) == Float32Array) and (len(y) == 1):
         y = y[0]
     else:
-        y=y.value
+        y = y.value
 
     conn.closeAllTrees()
     return x, y, U    # s --> s
@@ -289,9 +294,8 @@ def changeDriver(newMode):
     mode = newMode
 
 
-
 def getLatestShot():
-    if mode is 0:
+    if mode == 0:
         myDriver = getDriver()
         dpfFileName = myDriver + '\\dpf\\hl2a.dpf'
         dpfFile = open(dpfFileName, 'rb')
@@ -302,9 +306,9 @@ def getLatestShot():
         shotNumber = st.unpack('l', content)[0]  # 4 bytes for long shot number
 
         dpfFile.close()
-    elif mode is 1:
-        shotNumber=80020
-    elif mode is 2:
+    elif mode == 1:
+        shotNumber = 80020
+    elif mode == 2:
 
         if isMachineReady('exl50'):
             [IPAddress, tree] = getIpTree4Machine('exl50')
@@ -313,7 +317,7 @@ def getLatestShot():
         else:
             pass
 
-    elif mode is 3:
+    elif mode == 3:
 
         if isMachineReady('east'):
             [IPAddress, tree] = getIpTree4Machine('east')
@@ -322,7 +326,7 @@ def getLatestShot():
         else:
             pass
 
-    if mode is 4:
+    if mode == 4:
         myDriver = getDriver()
         dpfFileName = myDriver + '\\dpf\\hl2a.dpf'
         dpfFile = open(dpfFileName, 'rb')
@@ -333,8 +337,6 @@ def getLatestShot():
         shotNumber = st.unpack('l', content)[0]  # 4 bytes for long shot number
 
         dpfFile.close()
-
-
 
     return shotNumber
 
@@ -380,7 +382,7 @@ def getInf(shotNumber, channelName, *args):
             myInf = myInfDas.getInfDas(ChnlIndex)
 
     except:
-        myInf=[];
+        myInf = []
     else:
         pass
 
@@ -415,7 +417,7 @@ def hl2adb(shotNumber, channelName, *args):
         print("shot: %d has no this %s " % (shotNumber, channelName))
         x = 0
         y = 0
-        U= 'au'
+        U = 'au'
         return x, y
     ChnlIndex = getChnlIndex(cns, channelName)
     if ChnlIndex > -1:
@@ -465,7 +467,6 @@ def hl2adbN(shotNumber, channelNameN, *args):  # output arguments are 4 with chn
         pattern = re.compile(':(' + channelNameN + '):', re.I)
         channelNameN = pattern.findall(':' + ':'.join(cns) + ':')
 
-
     elif (type(channelNameN) == list):
         channelNameN = channelNameN
 
@@ -484,7 +485,8 @@ def hl2adbN(shotNumber, channelNameN, *args):  # output arguments are 4 with chn
     for myInf in myInfs:
         UnitN.append(myInf.Unit)
 
-    myData = DataDasN.DataDasN(DataFileName, myStart, myEnd, myFrq)  # initialize the class
+    myData = DataDasN.DataDasN(
+        DataFileName, myStart, myEnd, myFrq)  # initialize the class
     x, yN = myData.getMycurveN(myInfs, *args)
 
     return 1000*x, yN, channelNameN, UnitN  # s->ms
@@ -526,46 +528,48 @@ def getChnlIndexN(myList, myChannelList):
 
 
 def getDasDir(myShot):
-    myThousands = int(myShot / 1000);
-    myHundreds = int((myShot % 1000) / 100);
-    myShotSpan = myThousands * 1000 + int((myHundreds) / 2) * 200;
+    myThousands = int(myShot / 1000)
+    myHundreds = int((myShot % 1000) / 100)
+    myShotSpan = myThousands * 1000 + int((myHundreds) / 2) * 200
     # make sure the string is 5 digit
 
-    myDir = '00000' + str(myShotSpan);
-    n = len(myDir);
+    myDir = '00000' + str(myShotSpan)
+    n = len(myDir)
     myDir = myDir[-5:]  # stem of shotnumber for filename
     return myDir
 
 
 def getDriver():
-    if mode is 0:
+    if mode == 0:
         myDriver = '\\\\hl\\2adas'
         if not (os.path.exists(myDriver)):
             user = input("请输入用户名：")
             psw = input("请输入用户密码：")
 
-            cmd = 'net use ' + chr(32) + myDriver + chr(32) + psw + chr(32) + '/user:swip\\' + user
+            cmd = 'net use ' + chr(32) + myDriver + chr(32) + \
+                psw + chr(32) + '/user:swip\\' + user
             os.system(cmd)
 
             if not (os.path.exists(myDriver)):
                 print("no driver!")
-                myDriver = 'c:\\das'
+                myDriver = localdriver
 
-    elif mode is 1:
-        myDriver = 'c:\\das'
+    elif mode == 1:
+        myDriver = localdriver
 
-    if mode is 4:
+    if mode == 4:
         myDriver = '\\\\hl\\2mdas'
         if not (os.path.exists(myDriver)):
             user = input("请输入用户名：")
             psw = input("请输入用户密码：")
 
-            cmd = 'net use ' + chr(32) + myDriver + chr(32) + psw + chr(32) + '/user:swip\\' + user
+            cmd = 'net use ' + chr(32) + myDriver + chr(32) + \
+                psw + chr(32) + '/user:swip\\' + user
             os.system(cmd)
 
             if not (os.path.exists(myDriver)):
                 print("no driver!")
-                myDriver = 'c:\\das'
+                myDriver = localdriver
 
     return myDriver
 
@@ -575,8 +579,10 @@ def getInfFileName(myShot, mySys):
     myDir = getDasDir(myShot)
     myShotName = '00000' + str(myShot)
     myShotName = myShotName[-5:]  # should be five character
-    myInfFileName = getDriver() + '\\' + myDir + '\\INF\\' + myShotName + mySys + '.inf'
-    return myInfFileName
+    # myInfFileName = getDriver() + '\\' + myDir + '\\INF\\' + \
+    #     myShotName + mySys + '.inf'
+    myInfFileName = getDriver() / myDir / "INF" / (myShotName + mySys + '.inf')
+    return str(myInfFileName)
 
 
 def isMachineReady(machine):
@@ -587,7 +593,7 @@ def isMachineReady(machine):
     tic = datetime.now()
     os.system(cmd)
     toc = datetime.now()
-    elapsedSeconds=(toc-tic).total_seconds()
+    elapsedSeconds = (toc-tic).total_seconds()
 
     pingInf = open('pingInf.txt', 'r')
     pingStatus = pingInf.read()
@@ -596,20 +602,23 @@ def isMachineReady(machine):
     checkPattern = re.compile('已发送 = 4，已接收 = 4，丢失 = 0')
     mObj = checkPattern.search(pingStatus)
 
-    if (mObj is None) or elapsedSeconds >10:
+    if (mObj == None) or elapsedSeconds > 10:
         return False
 
     else:
         return True
+
 
 def setSystemName(myShot):
     # myDriver = getDriver()
     myDir = getDasDir(myShot)
     myShotName = '00000' + str(myShot)
     myShotName = myShotName[-5:]  # should be five character
-    myInfDirFiles = getDriver() + '\\' + myDir + '\\INF\\' + myShotName + '* '
+    # myInfDirFiles = getDriver() + '\\' + myDir + '\\INF\\' + myShotName + '* '
+    myInfDirFiles = getDriver() / myDir / "INF" / (myShotName + '* ')
 
-    cmd = 'dir ' + myInfDirFiles + '> chnl_systemFiles.txt'
+    # TODO: linux/win 兼容命令行
+    cmd = ('dir ' + str(myInfDirFiles) + '> chnl_systemFiles.txt')
     os.system(cmd)
     chnl_sysFile = open('chnl_systemFiles.txt', 'r')
     chnl_sys = chnl_sysFile.read()
@@ -627,14 +636,17 @@ def setSystemName(myShot):
             infchs = InfChnl.InfChnls(InfFileName)
             chnls = infchs.getChnls
             for chnl in chnls:
-                strSystemChnl = strSystemChnl + ';' + chnl  + ';\n'
+                strSystemChnl = strSystemChnl + ';' + chnl + ';\n'
 
-    if mode is 0:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile0.txt')
-    elif mode is 1:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile1.txt')
-    elif mode is 4:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile4.txt')
+    if mode == 0:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile0.txt')
+    elif mode == 1:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile1.txt')
+    elif mode == 4:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile4.txt')
 
     systemNameFile = open(SystemChnlFile, 'w')
     n = systemNameFile.writelines(strSystemChnl)
@@ -648,13 +660,15 @@ def getSystemName(channelName):
     elif mode == 3:
         treeChnlFile = os.path.join(os.getcwd(), 'machine\\east.mat')
 
-
-    if mode is 0:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile0.txt')
-    elif mode is 1:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile1.txt')
-    elif mode is 4:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile4.txt')
+    if mode == 0:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile0.txt')
+    elif mode == 1:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile1.txt')
+    elif mode == 4:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile4.txt')
 
     chnl_sysFile = open(SystemChnlFile, 'r')
     chnl_sys = chnl_sysFile.read()
@@ -685,7 +699,6 @@ def getSystemName(channelName):
 def getTreeName(channelName):
     #  .mat version
 
-
     if mode == 2:
         if sys.platform in ['linux', 'darwin']:
             treeChnlFile = os.path.join(os.getcwd(), 'machine/exl50.mat')
@@ -696,10 +709,8 @@ def getTreeName(channelName):
             treeChnlFile = os.path.join(os.getcwd(), 'machine/east.mat')
         else:
             treeChnlFile = os.path.join(os.getcwd(), 'machine\\east.mat')
-    
 
     # if not (os.path.exists(treeChnlFile)):
-
 
     a = sio.loadmat(treeChnlFile)
     chnl_sys = str(a['myChnlString'])
@@ -728,9 +739,9 @@ def getTreeName(channelName):
     mode =3
     channelName='pcpf1'
 
-    if mode is 2:
+    if mode == 2:
         treeChnlFile = 'C:\\DataProc\\exl50\\exl50.txt'
-    elif mode is 3:
+    elif mode == 3:
         treeChnlFile = 'C:\\DataProc\\east\\east.txt'
 
     chnl_sysFile = open(treeChnlFile, 'r')
@@ -762,8 +773,6 @@ def getTreeName(channelName):
 def getChnlNode(channelName):
 
     # .mat version
-
-
 
     if mode == 2:
         treeChnlFile = os.path.join(os.getcwd(), 'machine\\exl50.mat')
@@ -806,9 +815,9 @@ def getChnlNode(channelName):
 
             """
     # .txt version
-    if mode is 2:
+    if mode == 2:
         treeChnlFile = 'C:\\DataProc\\exl50\\exl50.txt'
-    elif mode is 3:
+    elif mode == 3:
         treeChnlFile = 'C:\\DataProc\\east\\east.txt'
 
     chnl_sysFile = open(treeChnlFile, 'r')
@@ -847,22 +856,23 @@ def getChnlNode(channelName):
             myChnlSys.append(myChnlSysFind)
     """
 
-
     return myChnlSys
 
 
 def getChnlPattern(channelName):
-    if mode is 0:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile0.txt')
-    elif mode is 1:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile1.txt')
-    elif mode is 4:
-        SystemChnlFile=os.path.join(os.getcwd(), 'machine\\systemNameFile4.txt')
+    if mode == 0:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile0.txt')
+    elif mode == 1:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile1.txt')
+    elif mode == 4:
+        SystemChnlFile = os.path.join(
+            os.getcwd(), 'machine\\systemNameFile4.txt')
 
     chnl_sysFile = open(SystemChnlFile, 'r')
     chnl_sys = chnl_sysFile.read()
     chnl_sysFile.close()
-
 
     # why plus ';', more channel ignored
     # patternChnl = re.compile(';\w*' + channelName + '\w*;', re.I)
@@ -871,7 +881,7 @@ def getChnlPattern(channelName):
     chnlList = patternChnl.findall(chnl_sys)
 
     myChnlSys = []
-    if len(chnlList)==0:  # no chnl find
+    if len(chnlList) == 0:  # no chnl find
         pass
     else:
         for chnl in chnlList:
@@ -882,27 +892,22 @@ def getChnlPattern(channelName):
             patternSyS = re.compile('([a-zA-Z]{3}:)')
             sysList = patternSyS.findall(chnl_sys)
 
-            for i in range(1,len(sysList)):
+            for i in range(1, len(sysList)):
                 pattern1 = re.compile(sysList[i])
                 mObj = pattern1.search(chnl_sys)
                 mySysStart = mObj.start()
 
                 if mySysStart > myStart:
-                    myChnlSysFind=sysList[i-1] + chnl
+                    myChnlSysFind = sysList[i-1] + chnl
                     break
                 else:
                     myChnlSysFind = sysList[i] + chnl
 
             myChnlSys.append(myChnlSysFind)
 
-
-
     return myChnlSys
 
-##  your code here
-
-
-
+# your code here
 
 
 # x, y, U=exl50db(4912, 'ip','0:3:0.001')
@@ -919,7 +924,6 @@ def getChnlPattern(channelName):
 # # x, y, U=hl2adb(36808,'I_div_imp2', 'MIF')
 # plt.plot(x,y)
 # plt.show()
-
 
 
 #######################################
@@ -940,15 +944,12 @@ def getChnlPattern(channelName):
 # print(u)
 
 # setSystemName(36808)
-
 # x, y, U = eastdb(33038, 'pcpf1','0:10:0.1')
 # plt.plot(x,y)
 # plt.show()
 #
-
 # x, y=hl2adbN(36808, ['BOLU01','BOLU02','BOLU03'], -100000, 2000000, '10000hz', 'BLM')
 # x, y=hl2adbN(36981, ['NBHE_I3VFil','NBHE_I3IArc','NBHE_I3ISnb'], 0, 2000000, '10000hz', 'IH2')
-
 #
 # x, yN, channelNameN, UnitN = hl2adbN(37052, 'mpol_[0-9][0-9]', 0, 2000, '10000hz', 'MIF')
 # plt.plot(x, yN[0])

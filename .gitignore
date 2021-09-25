@@ -4,6 +4,7 @@ venv-bck
 
 # Other object files
 *.dat
+/data/
 # *.xlsx
 # *.docx
 # *.csv

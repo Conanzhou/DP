@@ -1029,7 +1029,8 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if len(sys.argv)>1:
             self.mode = int(sys.argv[1])
         else:
-            self.mode = 0
+            # note:change machine
+            self.mode = 1
 
 
         desktop = QtWidgets.QApplication.desktop()
@@ -1335,7 +1336,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         elif self.mode == 1:
 
             self.Warning.append('machine is Local DAS')
-            self.shot.setValue(80020)
+            self.shot.setValue(38570)
         elif self.mode == 2:
             if DPI.isMachineReady('exl50'):
                 self.Warning.append('machine is exl50')
@@ -1642,7 +1643,8 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
             myDir = DPI.getDasDir(myShot)
             myShotName = '00000' + str(myShot)
             myShotName = myShotName[-5:]  # should be five character
-            myInfDir = DPI.getDriver() + '\\' + myDir + '\\INF'
+            # myInfDir = DPI.getDriver() + '\\' + myDir + '\\INF'
+            myInfDir = DPI.getDriver() / myDir / "INF"
             myDirs=os.listdir(myInfDir)
             self.Files.clear()
             for F in myDirs:
@@ -1862,7 +1864,8 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.gridLayout.addWidget(F, 0, 0)
                 self.Channels.setEnabled(True)
 
-        except:
+        except Exception as e:
+            print(e)
             self.Warning.append(channelName + ' or something wrong')
             self.Channels.setEnabled(True)
         else:
