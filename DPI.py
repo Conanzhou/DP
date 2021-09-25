@@ -168,8 +168,10 @@ def sct(machine, shotNumber):
     conn.closeAllTrees()
     conn.disconnect()
 
-    ChnlFile = 'machine\\' + machine + '.mat'
-    treeChnlFile = os.path.join(os.getcwd(), ChnlFile)
+    # ChnlFile = 'machine\\' + machine + '.mat'
+    # treeChnlFile = os.path.join(os.getcwd(), ChnlFile)
+    ChnlFile = Path("machine") / (machine + '.mat')
+    treeChnlFile = Path.cwd() / ChnlFile
 
     sio.savemat(treeChnlFile, {'myChnlString': myChnlString})
 
@@ -189,8 +191,10 @@ def sctAD(machine, shotNumber):
     conn.closeAllTrees()
     conn.disconnect()
 
-    ChnlFile = 'machine\\' + machine + '.mat'
-    treeChnlFile = os.path.join(os.getcwd(), ChnlFile)
+    # ChnlFile = 'machine\\' + machine + '.mat'
+    # treeChnlFile = os.path.join(os.getcwd(), ChnlFile)
+    ChnlFile = Path("machine") / (machine + '.mat')
+    treeChnlFile = Path.cwd() / ChnlFile
 
     sio.savemat(treeChnlFile, {'myChnlString': myChnlString})
 
@@ -297,7 +301,8 @@ def changeDriver(newMode):
 def getLatestShot():
     if mode == 0:
         myDriver = getDriver()
-        dpfFileName = myDriver + '\\dpf\\hl2a.dpf'
+        # dpfFileName = myDriver + '\\dpf\\hl2a.dpf'
+        dpfFileName = myDriver / "dpf" / "hl2a.dpf"
         dpfFile = open(dpfFileName, 'rb')
 
         offset = 982  #
@@ -328,7 +333,8 @@ def getLatestShot():
 
     if mode == 4:
         myDriver = getDriver()
-        dpfFileName = myDriver + '\\dpf\\hl2a.dpf'
+        # dpfFileName = myDriver + '\\dpf\\hl2a.dpf'
+        dpfFileName = myDriver / "dpf" / "hl2a.dpf"
         dpfFile = open(dpfFileName, 'rb')
 
         offset = 982  #
@@ -659,19 +665,24 @@ def setSystemName(myShot):
 def getSystemName(channelName):
 
     if mode == 2:
-        treeChnlFile = os.path.join(os.getcwd(), 'machine\\exl50.mat')
+        # treeChnlFile = os.path.join(os.getcwd(), 'machine\\exl50.mat')
+        treeChnlFile = Path.cwd() / "machine" / "exl50.mat"
     elif mode == 3:
-        treeChnlFile = os.path.join(os.getcwd(), 'machine\\east.mat')
+        # treeChnlFile = os.path.join(os.getcwd(), 'machine\\east.mat')
+        treeChnlFile = Path.cwd() / "machine" / "east.mat"
 
     if mode == 0:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile0.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile0.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile0.txt"
     elif mode == 1:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile1.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile0.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile1.txt"
     elif mode == 4:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile4.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile0.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile4.txt"
 
     chnl_sysFile = open(SystemChnlFile, 'r')
     chnl_sys = chnl_sysFile.read()
@@ -864,14 +875,17 @@ def getChnlNode(channelName):
 
 def getChnlPattern(channelName):
     if mode == 0:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile0.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile0.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile0.txt"
     elif mode == 1:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile1.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile0.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile1.txt"
     elif mode == 4:
-        SystemChnlFile = os.path.join(
-            os.getcwd(), 'machine\\systemNameFile4.txt')
+        # SystemChnlFile = os.path.join(
+        #     os.getcwd(), 'machine\\systemNameFile0.txt')
+        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile4.txt"
 
     chnl_sysFile = open(SystemChnlFile, 'r')
     chnl_sys = chnl_sysFile.read()
