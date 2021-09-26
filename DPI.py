@@ -547,7 +547,9 @@ def getDasDir(myShot):
 
 def getDriver():
     if mode == 0:
-        myDriver = '\\\\hl\\2adas'
+        # myDriver = '\\\\hl\\2adas'
+        # myDriver = Path("\\") / "hl" / "2adas"
+        myDriver = Path(r'\\hl\2adas')
         if not (os.path.exists(myDriver)):
             user = input("请输入用户名：")
             psw = input("请输入用户密码：")
@@ -564,7 +566,8 @@ def getDriver():
         myDriver = localdriver
 
     if mode == 4:
-        myDriver = '\\\\hl\\2mdas'
+        # myDriver = '\\\\hl\\2mdas'
+        myDriver = Path(r'\\hl\2mdas')
         if not (os.path.exists(myDriver)):
             user = input("请输入用户名：")
             psw = input("请输入用户密码：")
