@@ -1857,11 +1857,38 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                     self.setCurveData(x, y, n, str(currentShot) + '\\' + channelName, channelName)
 
-                F = MyFigure(width=5, height=4, dpi=100)
-                F.fig.suptitle(channelName)
-                # F.axes = F.fig.add_subplot(111)
-                F.axes.plot(x, y)
+                # F = MyFigure(width=5, height=4, dpi=100)
+                # F.fig.suptitle(channelName)
+                # # F.axes = F.fig.add_subplot(111)
+                # F.axes.plot(x, y)
+
+                # pyqtgraph 替代 mathplot
+
+                pg.setConfigOptions(background='w', foreground= 'k', leftButtonPan=False, antialias=True) 
+                F = pg.PlotWidget(title= channelName)
                 self.gridLayout.addWidget(F, 0, 0)
+                F.plot(x,y, pen=pg.mkPen(color=(181, 196, 177),width=2))
+                # # F.show()
+                
+                # F = pg.GraphicsLayoutWidget(show=True)
+                # self.gridLayout.addWidget(F, 0, 0)
+                # # F.setWindowTitle('pyqtgraph example: crosshair')
+                # label = pg.LabelItem(justify='right')
+                # F.addItem(label)
+                # p1 = F.addPlot(row=1, col=0)
+                # # p2 = F.addPlot(row=2, col=0)
+
+                # region = pg.LinearRegionItem()
+                # region.setZValue(10)
+                # # Add the LinearRegionItem to the ViewBox, but tell the ViewBox to exclude this 
+                # # item when doing auto-range calculations.
+                # # p2.addItem(region, ignoreBounds=True)
+
+                # #pg.dbg()
+                # p1.setAutoVisible(y=True)
+                # p1.plot(x*1000,y, pen=pg.mkPen(color=(181, 196, 177),width=2))
+
+                # self.gridLayout.addWidget(F, 0, 0)
                 self.Channels.setEnabled(True)
 
         except Exception as e:

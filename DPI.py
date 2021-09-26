@@ -432,7 +432,7 @@ def hl2adb(shotNumber, channelName, *args):
 
         pattern = re.compile(r'(\.[iI][nN][fF])')
         DataFileName = re.sub(pattern, r'.dat', InfFileName)
-
+        
         pattern = re.compile(r'([iI][nN][fF])')
         DataFileName = re.sub(pattern, r'DATA', DataFileName)
         # DataFileName = 'C:\\das\\80000\\DATA\\80030vol.DAT'
