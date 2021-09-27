@@ -1868,6 +1868,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 F = pg.PlotWidget(title= channelName)
                 self.gridLayout.addWidget(F, 0, 0)
                 F.plot(x,y, pen=pg.mkPen(color=(181, 196, 177),width=2))
+                F.showGrid(x=True, y=True)  # 设置网格
                 # # F.show()
                 
                 # F = pg.GraphicsLayoutWidget(show=True)
