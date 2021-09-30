@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import math
 import numpy as np
 from scipy import interpolate
@@ -168,7 +169,7 @@ def MyYTick(yLim, n, r, *args):
     # yLim is list with two number
     # n is the tick number, 3 is recommended
     # r is the number of accuracy。 digit number after point
-
+    
     # gapMode =0  # 0=songxm mode, uniform, 1=conventional mode
 
     if len(args) == 0:

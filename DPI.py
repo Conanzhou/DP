@@ -431,7 +431,7 @@ def hl2adb(shotNumber, channelName, *args):
         myInf = myInfDas.getInfDas(ChnlIndex)
 
         pattern = re.compile(r'(\.[iI][nN][fF])')
-        DataFileName = re.sub(pattern, r'.dat', InfFileName)
+        DataFileName = re.sub(pattern, r'.DAT', InfFileName)
         
         pattern = re.compile(r'([iI][nN][fF])')
         DataFileName = re.sub(pattern, r'DATA', DataFileName)
