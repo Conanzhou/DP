@@ -179,15 +179,15 @@ class Ui_MainWindow(object):
         self.Warning.append('X:' + str(s.x()))
         self.Warning.append('Y:' + str(s.y()))
 
-        desktop = QtWidgets.QApplication.desktop()
+        desktop = QtWidgets.QApplication.desktop().availableGeometry()
 
         Rows = 20
-        Cols = 6
-        width = desktop.width() * 0.9
-        height = desktop.height() * 0.9
+        Cols = 6 
+        width = desktop.width()
+        height = desktop.height()
         wstep = width / Cols
         hstep = height / Rows
-        if s.x() < 2 * wstep and s.y() > 12 * hstep:
+        if s.x() < 2 * wstep and s.y() > 6 * hstep:
             self.resizeDP1(self.MainWindow)
 
         if s.x() > 4 * wstep and s.y() < 6 * hstep:
@@ -244,19 +244,21 @@ class Ui_MainWindow(object):
         desktop = QtWidgets.QApplication.desktop().availableGeometry()
 
         Rows = 20
-        Cols = 6
+        Cols = 6*2
         width = desktop.width()
         height = desktop.height()
         if width > 2500:
             width = 1800
             height = 1000
+        
+        # gap 宽度,百分比 
+        n_w_gap = 0.01 
+        n_h_gap = 0.06
+        w = width / (Cols + (Cols - 1) * n_w_gap)
+        h = height / (Rows + (Rows - 1) *n_h_gap)
 
-        wstep = width / Cols
-        hstep = height / Rows
-
-
-        w = 0.99 * wstep
-        h = 0.94 * hstep
+        wstep = (1 + n_w_gap) * w
+        hstep = (1 + n_h_gap) * h
 
         # window.resize(0, 0)
         window.resize(width, height)
@@ -266,39 +268,41 @@ class Ui_MainWindow(object):
         window.move(0, 0)
         window.show()
 
-        self.shot.setGeometry(0 * wstep, 0 * h, 0.5* w, 1 * h)
-        self.layoutMode.setGeometry(0 * wstep, 1 * h, 0.5 * w, 1 * h)
-        self.shotTogether.setGeometry(0 * wstep, 2 * h, 0.5 * w, 1 * h)
+        self.shot.setGeometry(0 * wstep, 0 * hstep, 1 * w, 1 * h)
+        self.layoutMode.setGeometry(0 * wstep, 1 * hstep, 1 * w, 1 * h)
+        self.shotTogether.setGeometry(0 * wstep, 2 * hstep, 1 * w, 1 * h)
 
-        self.xLeft.setGeometry(0.5 * wstep, 0 * h, 0.5* w, 1 * h)
-        self.shotOK.setGeometry(0.5 * wstep, 1 * h, 0.5 * w, 1 * h)
-        self.draw.setGeometry(0.5 * wstep, 2 * h, 0.5 * w, 1 * h)
+        self.xLeft.setGeometry(1 * wstep, 0 * hstep, 1 * w, 1 * h)
+        self.shotOK.setGeometry(1 * wstep, 1 * hstep, 1 * w, 1 * h)
+        self.draw.setGeometry(1 * wstep, 2 * hstep, 1 * w, 1 * h)
 
-        # 1.0
-        self.xRight.setGeometry(1.0 * wstep, 0 * h, 0.5* w, 1 * h)
-        self.update.setGeometry(1.0 * wstep, 1 * h, 0.5 * w, 1 * h)
-        self.chnlPattern.setGeometry(1.0 * wstep, 2 * h, 0.5 * w, 1 * h)
+        # 2
+        self.xRight.setGeometry(2 * wstep, 0 * hstep, 1 * w, 1 * h)
+        self.update.setGeometry(2 * wstep, 1 * hstep, 1 * w, 1 * h)
+        self.chnlPattern.setGeometry(2 * wstep, 2 * hstep, 1 * w, 1 * h)
 
+        # 3
+        self.freqInterp.setGeometry(3 * wstep, 0 * hstep, 1 * w, 1 * h)
 
-        self.freqInterp.setGeometry(1.5 * wstep, 0 * h, 0.5* w, 1 * h)
+        self.clearAll.setGeometry(4 * wstep, 0 * hstep, 1 * w, 1 * h)
+        self.clearOne.setGeometry(5 * wstep, 0 * hstep, 1 * w, 1 * h)
+        self.Warning.setGeometry(0 * wstep, 3 * hstep, 5 * wstep + w, 7 * hstep + h)
 
-        self.clearAll.setGeometry(2.0 * wstep, 0 * h, 0.5 * w, 1 * h)
-        self.clearOne.setGeometry(2.5 * wstep, 0 * h, 0.5 * w, 1 * h)
-        self.Warning.setGeometry(0.01 * wstep, 3 * h, 2.99 * w, 9.2 * h)
+        self.LabelFiles.setGeometry(6 * wstep, 0 * hstep, wstep + w, 1 * h)
+        self.LabelCurves.setGeometry(8 * wstep, 0 * hstep, wstep + w, 1 * h)
+        self.Browser.setGeometry(10 * wstep, 0 * hstep, wstep + w, 1 * h)
 
-        self.LabelFiles.setGeometry(3 * wstep, 0 * h, 0.99 * w, 1 * h)
-        self.LabelCurves.setGeometry(4 * wstep, 0 * h, 0.99 * w, 1 * h)
-        self.Browser.setGeometry(5 * wstep, 0 * h, 0.99 * w, 1 * h)
-        self.Files.setGeometry(3 * wstep, 1 * h, 0.99 * w, 19.5 * h)
-        self.Curves.setGeometry(4 * wstep, 1 * h, 0.99 * w, 19.5 * h)
-        self.Channels.setGeometry(5 * wstep, 1 * h, 0.99 * w, 19.5 * h)
-        self.groupBox.setGeometry(0.2, 12 * h, 3 * w, 8.5 * h)
+        self.Files.setGeometry(6 * wstep, 1 * hstep, wstep + w, 18 * hstep + h)
+        self.Curves.setGeometry(8 * wstep, 1 * hstep, wstep + w, 18 * hstep + h)
+        self.Channels.setGeometry(10 * wstep, 1 * hstep, wstep + w, 18 * hstep + h)
+
+        self.groupBox.setGeometry(0 * wstep, 11 * hstep, 5 * wstep + w, 7 * hstep + h)
 
         # Up/down and Sort
-        self.up.setGeometry(2.0 * wstep, 1 * h, 0.5 * w, 1 * h)
-        self.channel.setGeometry(2.0 * wstep, 2 * h, 0.5 * w, 1 * h)
-        self.down.setGeometry(2.5 * wstep, 1 * h, 0.5 * w, 1 * h)
-        self.sort.setGeometry(2.5 * wstep, 2 * h, 0.5 * w, 1 * h)
+        self.up.setGeometry(4 * wstep, 1 * hstep, 1 * w, 1 * h)
+        self.channel.setGeometry(4 * wstep, 2 * hstep, 1 * w, 1 * h)
+        self.down.setGeometry(5 * wstep, 1 * hstep, 1 * w, 1 * h)
+        self.sort.setGeometry(5 * wstep, 2 * hstep, 1 * w, 1 * h)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

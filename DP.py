@@ -1033,11 +1033,15 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mode = 1
 
 
-        desktop = QtWidgets.QApplication.desktop()
+        desktop = QtWidgets.QApplication.desktop().availableGeometry()
 
         myDPI=100
-        myWidth=math.floor(desktop.width()*0.9/myDPI)
-        myHeight=math.floor(desktop.height()*0.85/myDPI)
+        myWidth=math.floor(desktop.width()/myDPI)
+        myHeight=math.floor(desktop.height()/myDPI)
+
+        self.setWindowFlags(Qt.FramelessWindowHint)		#隐藏主窗口边界
+        # self.Qlayout.setSpacing(0)					#去除控件间的距离
+        # self.layout.setContentsMargins(0, 0, 0, 0)
 
         self.setupUi(self)
         self.initDP()
@@ -1087,6 +1091,8 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.curveData = CurveData('Songxm')
         self.gridLayout = QGridLayout(self.groupBox) # 继承容器groupBox
+        self.gridLayout.setSpacing(0)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
 
     def machineTrigger(self, q):
         global setMachineMode, setTreeMode
@@ -1866,6 +1872,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                 pg.setConfigOptions(background='w', foreground= 'k', leftButtonPan=False, antialias=True) 
                 F = pg.PlotWidget(title= channelName)
+                F.showGrid(x = True, y = True, alpha = 0.3)
                 self.gridLayout.addWidget(F, 0, 0)
                 F.plot(x,y, pen=pg.mkPen(color=(181, 196, 177),width=2))
                 # # F.show()
@@ -2070,6 +2077,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = mwindow()
     w.setWindowTitle("DP developed by Dr. SONG")
+    w.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
 
     w.Files.clicked.connect(w.fileClicked)
     w.Channels.clicked.connect(w.channelClicked)
