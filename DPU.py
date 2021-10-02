@@ -102,13 +102,14 @@ class Ui_MainWindow(object):
         self.chnlPattern.setPlaceholderText("Search Chnl") # search bar
         self.chnlPattern.setObjectName("chnlPattern")
         MainWindow.setCentralWidget(self.centralwidget)
+
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1048, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        # self.statusbar.setObjectName("statusbar")
+        # MainWindow.setStatusBar(self.statusbar)
 
         # Up/down and Sorting
         self.channel = QtWidgets.QPushButton(self.centralwidget)
@@ -255,7 +256,7 @@ class Ui_MainWindow(object):
         n_w_gap = 0.01 
         n_h_gap = 0.06
         w = width / (Cols + (Cols - 1) * n_w_gap)
-        h = height / (Rows + (Rows - 1) *n_h_gap)
+        h = (height - self.menubar.geometry().height()-10) / (Rows + (Rows - 1) *n_h_gap)
 
         wstep = (1 + n_w_gap) * w
         hstep = (1 + n_h_gap) * h
@@ -296,7 +297,7 @@ class Ui_MainWindow(object):
         self.Curves.setGeometry(8 * wstep, 1 * hstep, wstep + w, 18 * hstep + h)
         self.Channels.setGeometry(10 * wstep, 1 * hstep, wstep + w, 18 * hstep + h)
 
-        self.groupBox.setGeometry(0 * wstep, 11 * hstep, 5 * wstep + w, 7 * hstep + h)
+        self.groupBox.setGeometry(0 * wstep, 11 * hstep, 5 * wstep + w, 8 * hstep + h)
 
         # Up/down and Sort
         self.up.setGeometry(4 * wstep, 1 * hstep, 1 * w, 1 * h)

@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os
+import sys
 import struct as st
 import re
 
@@ -64,16 +65,30 @@ class InfDas:
             self.ChnlName = bytes.decode(infStr[iStart:indexEnd])  # 12 bytes
             iStart=iEnd
             iEnd=iStart+4
-            self.Addr = st.unpack('l', infStr[iStart:iEnd]+b'\x00\x00\x00\x00')[0]  # 4 bytes
-            iStart=iEnd
-            iEnd=iStart+4
-            self.Freq = st.unpack('f', infStr[iStart:iEnd])[0]  # 4 bytes
-            iStart=iEnd
-            iEnd=iStart+4
-            self.Len = st.unpack('l', infStr[iStart:iEnd]+b'\x00\x00\x00\x00')[0]  # 4 bytes
-            iStart=iEnd
-            iEnd=iStart+4
-            self.Post = st.unpack('l', infStr[iStart:iEnd]+b'\x00\x00\x00\x00')[0]  # 4 bytes
+            if sys.platform in ['linux', 'darwin']:
+                self.Addr = st.unpack('l', infStr[iStart:iEnd]+b'\x00\x00\x00\x00')[0]  # 4 bytes
+                iStart=iEnd
+                iEnd=iStart+4
+                self.Freq = st.unpack('f', infStr[iStart:iEnd])[0]  # 4 bytes
+                iStart=iEnd
+                iEnd=iStart+4
+                self.Len = st.unpack('l', infStr[iStart:iEnd]+b'\x00\x00\x00\x00')[0]  # 4 bytes
+                iStart=iEnd
+                iEnd=iStart+4
+                self.Post = st.unpack('l', infStr[iStart:iEnd]+b'\x00\x00\x00\x00')[0]  # 4 bytes
+            else:
+                self.Addr = st.unpack('l', infStr[iStart:iEnd])[0]  # 4 bytes
+                iStart=iEnd
+                iEnd=iStart+4
+                self.Freq = st.unpack('f', infStr[iStart:iEnd])[0]  # 4 bytes
+                iStart=iEnd
+                iEnd=iStart+4
+                self.Len = st.unpack('l', infStr[iStart:iEnd])[0]  # 4 bytes
+                iStart=iEnd
+                iEnd=iStart+4
+                self.Post = st.unpack('l', infStr[iStart:iEnd])[0]  # 4 bytes
+            
+
             iStart=iEnd
             iEnd=iStart+2
             self.MaxDat = st.unpack('H', infStr[iStart:iEnd])[0]  # 2 bytes type=uint16
