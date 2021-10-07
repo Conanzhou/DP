@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>990</width>
+    <height>499</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::DefaultContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>DP modified by QYxYZ</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="12,4,4,4">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="3,7,0">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0" columnstretch="2,0,0,0,0,0">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetNoConstraint</enum>
+          </property>
+          <property name="spacing">
+           <number>1</number>
+          </property>
+          <item row="2" column="5">
+           <widget class="QPushButton" name="Sort">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>sort</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QPushButton" name="clearAll">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>clearAll</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="draw">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>draw</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="shotOK">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>shotOK</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="xLeft">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QPushButton" name="clearOne">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>clearOne</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QPushButton" name="up">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>up</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QSpinBox" name="shot">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="update">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>updata</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="shotTogether">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>shotTogether</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="QPushButton" name="down">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>down</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QPushButton" name="channel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>channel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QComboBox" name="layoutMode">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="currentText">
+             <string>1</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1,1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>111</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1,1+n/2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>cmp</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLineEdit" name="xRight">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>10</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLineEdit" name="freqInterp">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="text">
+             <string>0.001</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLineEdit" name="chnlPattern">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(199, 237, 204);</string>
+            </property>
+            <property name="placeholderText">
+             <string>Search Chnl</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTextBrowser" name="Warning">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>12</horstretch>
+            <verstretch>7</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGraphicsView" name="groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>12</horstretch>
+            <verstretch>8</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,17">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="LabelFiles">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>4</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+          <property name="text">
+           <string>Files</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListView" name="Files">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>4</horstretch>
+            <verstretch>17</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,17">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="LabelCurves">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>4</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+          <property name="text">
+           <string>Curves</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListView" name="Curves">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>4</horstretch>
+            <verstretch>17</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,17">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="Browser">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>4</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+          <property name="text">
+           <string>Browser</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListView" name="Channels">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>4</horstretch>
+            <verstretch>17</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>990</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionsetSystemName"/>
+    <addaction name="actionsaveConfig"/>
+    <addaction name="actionsaveData"/>
+    <addaction name="actionloadData"/>
+    <addaction name="actionloadConfig"/>
+    <addaction name="actiondrawMode"/>
+   </widget>
+   <widget class="QMenu" name="menuMachine">
+    <property name="title">
+     <string>Machine</string>
+    </property>
+    <addaction name="actionsetMachine"/>
+    <addaction name="actionChnlConfig"/>
+    <addaction name="actionscanTree"/>
+    <addaction name="actionscanTreeAD"/>
+    <addaction name="actiondefaultChnl"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionBasics"/>
+    <addaction name="actionButtons"/>
+    <addaction name="actionDrop_Down_Menu"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuMachine"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionsetSystemName">
+   <property name="text">
+    <string>setSystemName</string>
+   </property>
+  </action>
+  <action name="actionsaveConfig">
+   <property name="text">
+    <string>saveConfig</string>
+   </property>
+  </action>
+  <action name="actionsaveData">
+   <property name="text">
+    <string>saveData</string>
+   </property>
+  </action>
+  <action name="actionloadData">
+   <property name="text">
+    <string>loadData</string>
+   </property>
+  </action>
+  <action name="actionloadConfig">
+   <property name="text">
+    <string>loadConfig</string>
+   </property>
+  </action>
+  <action name="actiondrawMode">
+   <property name="text">
+    <string>drawMode</string>
+   </property>
+  </action>
+  <action name="actionsetMachine">
+   <property name="text">
+    <string>setMachine</string>
+   </property>
+  </action>
+  <action name="actionChnlConfig">
+   <property name="text">
+    <string>ChnlConfig</string>
+   </property>
+  </action>
+  <action name="actionscanTree">
+   <property name="text">
+    <string>scanTree</string>
+   </property>
+  </action>
+  <action name="actionscanTreeAD">
+   <property name="text">
+    <string>scanTreeAD</string>
+   </property>
+  </action>
+  <action name="actiondefaultChnl">
+   <property name="text">
+    <string>defaultChnl</string>
+   </property>
+  </action>
+  <action name="actionBasics">
+   <property name="text">
+    <string>Basics</string>
+   </property>
+  </action>
+  <action name="actionButtons">
+   <property name="text">
+    <string>Buttons</string>
+   </property>
+  </action>
+  <action name="actionDrop_Down_Menu">
+   <property name="text">
+    <string>Drop Down Menu</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
