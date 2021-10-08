@@ -2,7 +2,7 @@
 # mode 0=hl2a, 1=localdas, 2=exl50, 3=east, 4=hl2m
 # manual mode, 1=set mode, 2 =run
 
-from MDSplus import *
+# from MDSplus import *
 import InfDasN
 import DataDasN
 import InfChnl

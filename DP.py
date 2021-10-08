@@ -20,7 +20,9 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPalette, QFont
 from PyQt5.QtCore import *
-from DPU import Ui_MainWindow
+from ui_DP import Ui_MainWindow
+from pathlib import Path 
+
 # figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 # from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
@@ -1014,7 +1016,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(mwindow, self).__init__()
         global gWarning
-        global myDPI, myWidth, myHeight
+        # global myDPI, myWidth, myHeight
         global showInfMode
         global setMachineMode, setTreeMode
         global machineName, treeNames
@@ -1030,19 +1032,19 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mode = int(sys.argv[1])
         else:
             # note:change machine
-            self.mode = 1
+            self.mode = 0
 
 
-        desktop = QtWidgets.QApplication.desktop().availableGeometry()
+        # desktop = QtWidgets.QApplication.desktop().availableGeometry()
 
-        myDPI=100
-        myWidth=math.floor(desktop.width()/myDPI)
-        myHeight=math.floor(desktop.height()/myDPI)
+        # myDPI=100
+        # myWidth=math.floor(desktop.width()/myDPI)
+        # myHeight=math.floor(desktop.height()/myDPI)
 
-        self.setWindowFlags(Qt.FramelessWindowHint)		#隐藏主窗口边界
+        # self.setWindowFlags(Qt.FramelessWindowHint)		#隐藏主窗口边界
         # self.Qlayout.setSpacing(0)					#去除控件间的距离
         # self.layout.setContentsMargins(0, 0, 0, 0)
-
+        pg.setConfigOptions(background='#c7edcc', foreground= 'k', leftButtonPan=False, antialias=True)
         self.setupUi(self)
         self.initDP()
         self.view2Struct()
@@ -1053,10 +1055,10 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         gWarning=self.Warning
         self.Browser.setAutoFillBackground(True)
 
-        self.Browser.setAutoFillBackground(True)
-        self.Browser.setStyleSheet('background-color:green')
-        self.Browser.setStyleSheet('Color:red')
-        self.Browser.setStyleSheet("QPushButton:hover{color:blue}")
+        # self.Browser.setAutoFillBackground(True)
+        # self.Browser.setStyleSheet('background-color:green')
+        # self.Browser.setStyleSheet('Color:red')
+        # self.Browser.setStyleSheet("QPushButton:hover{color:blue}")
         self.Browser.setFont(QFont("宋体",20, QFont.Bold))
         self.shotOK.setFont(QFont("宋体",20, QFont.Bold))
         self.update.setFont(QFont("宋体",20, QFont.Bold))
@@ -1090,170 +1092,157 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # self.Browser.setPalette(palette_blue)
 
         self.curveData = CurveData('Songxm')
-        self.gridLayout = QGridLayout(self.groupBox) # 继承容器groupBox
-        self.gridLayout.setSpacing(0)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        # self.gridLayout = QGridLayout(self.groupBox) # 继承容器groupBox
+        # self.gridLayout.setSpacing(0)
+        # self.gridLayout.setContentsMargins(0, 0, 0, 0)
 
-    def machineTrigger(self, q):
-        global setMachineMode, setTreeMode
-        try:
-            if q.text() == 'setMachine':
-                setMachineMode=1
-                self.Warning.clear()
-                self.Warning.append('please select the data source')
-                machineNames=['hl2a', 'localdas', 'east', 'exl50', 'hl2m']
-                self.Files.clear()
-                # show the machine in Files for select
-                for m in machineNames:
-                    self.Files.addItem(m)
+    def setMachineTrigger(self):
+        global setMachineMode
+        setMachineMode=1
+        self.Warning.clear()
+        self.Warning.append('please select the data source')
+        machineNames=['hl2a', 'localdas', 'east', 'exl50', 'hl2m']
+        self.Files.clear()
+        # show the machine in Files for select
+        for m in machineNames:
+            self.Files.addItem(m)
 
-            elif q.text() == 'ChnlConfig':  # modify the configuration
-                self.hD = modifyConfig(self.curveData)
-                self.hD.setWindowModality(Qt.ApplicationModal)
-                self.hD.show()
-                self.hD.signalCurve.connect(self.receiveCurveData)
-                pass
+    def ChnlConfigTrigger(self):  # modify the configuration
+        self.hD = modifyConfig(self.curveData)
+        self.hD.setWindowModality(Qt.ApplicationModal)
+        self.hD.show()
+        self.hD.signalCurve.connect(self.receiveCurveData)
+    
+    def scanTreeTrigger(self):  # scan tree for channels
+        myShot = self.shot.value()
 
-            elif q.text() == 'scanTree':  # scan tree for channels
-                myShot = self.shot.value()
+        if self.mode == 0 or self.mode == 1:
+            pass
+        elif self.mode == 2:
+            DPI.sct('exl50', myShot)
+        elif self.mode == 3:
+            DPI.sct('east', myShot)
 
-                if self.mode == 0 or self.mode == 1:
-                    pass
-                elif self.mode == 2:
-                    DPI.sct('exl50', myShot)
-                elif self.mode == 3:
-                    DPI.sct('east', myShot)
+    def scanTreeADTrigger(self):  # scan tree for channels
+        myShot = self.shot.value()
 
-            elif q.text() == 'scanTreeAD':  # scan tree for channels
-                myShot = self.shot.value()
+        if self.mode == 0 or self.mode == 1:
+            pass
+        elif self.mode == 2:
+            DPI.sctAD('exl50', myShot)
+        elif self.mode == 3:
+            DPI.sctAD('east', myShot)
 
-                if self.mode == 0 or self.mode == 1:
-                    pass
-                elif self.mode == 2:
-                    DPI.sctAD('exl50', myShot)
-                elif self.mode == 3:
-                    DPI.sctAD('east', myShot)
+    def defaultChnlTrigger(self):  # modify the configuration
+        self.defaultChnlSaveLoad()  # save
 
 
-            elif q.text() == 'defaultChnl':  # modify the configuration
-                self.defaultChnlSaveLoad()  # save
-
-        except:
-            self.Warning.append('machineTrigger' + ' or something wrong')
-        else:
-            self.Warning.append('machineTrigger' +' is OK')
-
-    def processTrigger(self, q):
+    def setSystemNameTrigger(self):
         global drawMode
         myShot = self.shot.value()
-        if q.text() == 'setSystemName':
-
-            if self.mode == 0 or self.mode==1:
-                DPI.setSystemName(myShot)
-            elif self.mode ==2:
-                pass
-            elif self.mode==3:
-                pass
-
-        elif q.text() == 'saveData':   # save data for later analysis
-            path = 'C:\\DP\\data\\d' + str(myShot) + '.mat'
-            # path = 'C:\\DP\\data\\'
-            dataFile,_ =QFileDialog.getSaveFileName(self,'OpenFile',path,"matlab files (*.mat)")
-            myCurves=self.curveData
-
-            sio.savemat(dataFile, {'ChnlName': myCurves.ChnlName, 'X': myCurves.X, 'Y': myCurves.Y})
-            # sio.savemat(dataFile, {'ChnlName': myCurves.ChnlName, 'X': myCurves.X, 'Y': myCurves.Y, 'myCurves': myCurves})
+        if self.mode == 0 or self.mode==1:
+            DPI.setSystemName(myShot)
+        elif self.mode ==2:
             pass
-        elif q.text() == 'loadData':   # load data for analysis
-
-            path='C:\\DP\\data\\'
-            dataFile,_ =QFileDialog.getOpenFileName(self, 'OpenFile', path, "matlab files (*.mat)")
-            f=sio.loadmat(dataFile)
-            ChnlName=f['ChnlName']   #
-            X=f['X']   #
-            Y=f['Y']   #
-            # myCurves=f['myCurves']
-
-            self.Curves.clear()
-            self.curveData = CurveData('Songxm')  # initializing the class
-
-            for n in range(len(ChnlName)):
-                channelName=ChnlName[n]
-                self.Curves.addItem(channelName)
-                x=X[n]
-                y=Y[n]
-                self.setCurveData(x, y, n, channelName, channelName)
-
-        elif q.text() == 'saveConfig':  # save channel configuration for later use
-
-            path='C:\\DP\\configuration\\'
-            configFile,_ =QFileDialog.getSaveFileName(self,'OpenFile',path,"matlab files (*.mat)")
-            myCurves=self.curveData
-            myCurves.x=[]
-            myCurves.y=[]
-            sio.savemat(configFile, {'ChnlName': myCurves.ChnlName})
+        elif self.mode==3:
             pass
 
-        elif q.text() == 'loadConfig':
-            path='C:\\DP\\configuration\\'
-            configFile,_ =QFileDialog.getOpenFileName(self,'OpenFile',path,"matlab files (*.mat)")
-            f=sio.loadmat(configFile)
-            Chnl=f['ChnlName']   # np.array
+    def saveDataTrigger(self):   # save data for later analysis
+        myShot = self.shot.value()
+        path = Path.cwd() / "data" / (str(myShot) + '.mat')
+        dataFile,_ =QFileDialog.getSaveFileName(self,'OpenFile',str(path),"matlab files (*.mat)")
+        myCurves=self.curveData
 
-            self.hD = selectChnl(Chnl)
-            self.hD.setWindowModality(Qt.ApplicationModal)
-            self.hD.show()
-            self.hD.signalChnl.connect(self.receiveChnl)
+        sio.savemat(dataFile, {'ChnlName': myCurves.ChnlName, 'X': myCurves.X, 'Y': myCurves.Y})
+        # sio.savemat(dataFile, {'ChnlName': myCurves.ChnlName, 'X': myCurves.X, 'Y': myCurves.Y, 'myCurves': myCurves})
+    
+    def loadDataTrigger(self):   # load data for analysis
 
-            pass
-        elif q.text() == 'drawMode':
+        path = Path.cwd() / "data"
+        dataFile,_ =QFileDialog.getOpenFileName(self, 'OpenFile', str(path), "matlab files (*.mat)")
+        f=sio.loadmat(dataFile)
+        ChnlName=f['ChnlName']   #
+        X=f['X']   #
+        Y=f['Y']   #
+        # myCurves=f['myCurves']
 
-            number, ok = QInputDialog.getInt(self, "action", "0=mat,1=pyqtgrapg", drawMode, 0, 1, 1)
-            if ok:
-                drawMode = number
+        self.Curves.clear()
+        self.curveData = CurveData('Songxm')  # initializing the class
 
-            self.draw.clicked.disconnect()
+        for n in range(len(ChnlName)):
+            channelName=ChnlName[n]
+            self.Curves.addItem(channelName)
+            x=X[n]
+            y=Y[n]
+            self.setCurveData(x, y, n, channelName, channelName)
 
-            if drawMode == 0:  # matlab mode
-                self.draw.clicked.connect(self.drawClickedMat)
-            elif drawMode == 1:  # pyqtgraph mode
-                self.draw.clicked.connect(self.drawClicked)
+    def saveConfigTrigger(self):  # save channel configuration for later use
 
-            pass
+        path = Path.cwd() / "configuration"
+        configFile,_ =QFileDialog.getSaveFileName(self,'OpenFile',str(path),"matlab files (*.mat)")
+        myCurves=self.curveData
+        myCurves.x=[]
+        myCurves.y=[]
+        sio.savemat(configFile, {'ChnlName': myCurves.ChnlName})
+    
 
-    def helpTrigger(self,q):
-        if q.text() == 'Basics':  # how to use
-            self.Warning.append('---------------------------------------------------------------------------------' +
-                                '\n[BASICS]\n' +
-                                'Choosing a machine: click Machine and select setMachine from the drop down bar. Choose '
-                                + 'desired machine listed in the Files module\n\n' +
-                                'Searching for channel patterns: input regular expressions into search bar labeled '
-                                + 'Search Chnl. Results will appear in the Browser module\n\n' +
-                                'Adding channels to Curves: click Browser to change it to Browser+Add. You can now '
-                                + 'select multiple channels which will be listed in the Curves module, and can be drawn, '
-                                + 'updated, exported, etc\n\n' +
-                                'Exporting/Importing channels: click File and select saveConfig/loadConfig\n\n' +
-                                'For more information, click Help\n' +
-                                '---------------------------------------------------------------------------------')
-        elif q.text() == 'Buttons':
-            self.Warning.append('---------------------------------------------------------------------------------' +
-                                '\n[BUTTONS]\n' +
-                                'shotOK: prepares work for data mining for shot\n' +
-                                'update: reloads data based on current settings\n' +
-                                'draw: displays multiple data side by side when in Browser+Add mode\n' +
-                                'clearAll: clears entire interface\n' +
-                                '---------------------------------------------------------------------------------')
-        elif q.text() == 'Drop Down Menu':
-            self.Warning.append('---------------------------------------------------------------------------------' +
-                                '\n[DROP DOWN MENU]\n' +
-                                'setSystemName: [INFO]\n' +
-                                'saveConfig: saves current settings into external file\n' +
-                                'saveData: [INFO]\n' +
-                                'loadConfig: loads selected external file to update current settings\n' +
-                                'setMachine: allows user to select machine, listed under Files\n' +
-                                'ChnlConfig: allows user to modify the channel information\n' +
-                                'defaultChnl: [INFO]\n' +
-                                '---------------------------------------------------------------------------------')
+    def loadConfigTrigger(self):
+        path = Path.cwd() / "configuration"
+        configFile,_ =QFileDialog.getOpenFileName(self,'OpenFile',str(path),"matlab files (*.mat)")
+        f=sio.loadmat(configFile)
+        Chnl=f['ChnlName']   # np.array
+
+        self.hD = selectChnl(Chnl)
+        self.hD.setWindowModality(Qt.ApplicationModal)
+        self.hD.show()
+        self.hD.signalChnl.connect(self.receiveChnl)
+
+    
+    def drawModeTrigger(self):
+        global drawMode
+        number, ok = QInputDialog.getInt(self, "action", "0=mat,1=pyqtgrapg", drawMode, 0, 1, 1)
+        if ok:
+            drawMode = number
+
+        self.draw.clicked.disconnect()
+
+        if drawMode == 0:  # matlab mode
+            self.draw.clicked.connect(self.drawClickedMat)
+        elif drawMode == 1:  # pyqtgraph mode
+            self.draw.clicked.connect(self.drawClicked)
+
+    def BasicsTrigger(self):  # how to use
+        self.Warning.append('---------------------------------------------------------------------------------' +
+                            '\n[BASICS]\n' +
+                            'Choosing a machine: click Machine and select setMachine from the drop down bar. Choose '
+                            + 'desired machine listed in the Files module\n\n' +
+                            'Searching for channel patterns: input regular expressions into search bar labeled '
+                            + 'Search Chnl. Results will appear in the Browser module\n\n' +
+                            'Adding channels to Curves: click Browser to change it to Browser+Add. You can now '
+                            + 'select multiple channels which will be listed in the Curves module, and can be drawn, '
+                            + 'updated, exported, etc\n\n' +
+                            'Exporting/Importing channels: click File and select saveConfig/loadConfig\n\n' +
+                            'For more information, click Help\n' +
+                            '---------------------------------------------------------------------------------')
+    def ButtonsTrigger(self):
+        self.Warning.append('---------------------------------------------------------------------------------' +
+                            '\n[BUTTONS]\n' +
+                            'shotOK: prepares work for data mining for shot\n' +
+                            'update: reloads data based on current settings\n' +
+                            'draw: displays multiple data side by side when in Browser+Add mode\n' +
+                            'clearAll: clears entire interface\n' +
+                            '---------------------------------------------------------------------------------')
+    def DropDownMenuTrigger(self):
+        self.Warning.append('---------------------------------------------------------------------------------' +
+                            '\n[DROP DOWN MENU]\n' +
+                            'setSystemName: [INFO]\n' +
+                            'saveConfig: saves current settings into external file\n' +
+                            'saveData: [INFO]\n' +
+                            'loadConfig: loads selected external file to update current settings\n' +
+                            'setMachine: allows user to select machine, listed under Files\n' +
+                            'ChnlConfig: allows user to modify the channel information\n' +
+                            'defaultChnl: [INFO]\n' +
+                            '---------------------------------------------------------------------------------')
 
     def receiveCurveData(self,dictCurves):  # dict
 
@@ -1422,7 +1411,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         try:
 
-            pg.setConfigOptions(antialias=True, background='w', foreground='k')
+            # pg.setConfigOptions(antialias=True, background='w', foreground='k')
             self.mw = QMainWindow()
             self.gv = pg.GraphicsView()
 
@@ -1642,7 +1631,6 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.Files.addItem(F)
             self.Warning.append(str(myShot) + ' time stamp: ' + str(DPI.getDateTime('exl50',myShot)))
 
-
         elif self.mode == 0 or self.mode == 1 or self.mode == 4:
             setMachineMode = 0
             DPI.setSystemName(myShot)
@@ -1657,6 +1645,9 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 searchObj = re.search(myShotName, F)
                 if not (str(searchObj) == 'None'):
                     self.Files.addItem(F)
+
+        if self.Channels.currentItem().text():
+            self.channelClicked()
 
     def initDrawConfig(self):
         global isDrawConfigReady
@@ -1870,14 +1861,19 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                 # pyqtgraph 替代 mathplot
 
-                pg.setConfigOptions(background='w', foreground= 'k', leftButtonPan=False, antialias=True) 
-                F = pg.PlotWidget(title= channelName)
-                F.showGrid(x = True, y = True, alpha = 0.3)
-                self.gridLayout.addWidget(F, 0, 0)
-                F.plot(x,y, pen=pg.mkPen(color=(181, 196, 177),width=2))
-                F.showAxis('right')
-                F.showAxis('top')
-                F.showGrid(x=True, y=True)  # 设置网格
+                # pg.setConfigOptions(background=(181, 196, 177), foreground= 'k', leftButtonPan=False, antialias=True) 
+                # F = pg.PlotWidget(title= channelName)
+                self.graphicsView.clear()
+                self.graphicsView.setTitle(title= str(currentShot)+':'+channelName)
+                self.graphicsView.plot(x,y, pen=pg.mkPen(color='b',width=2))
+                self.graphicsView.showGrid(x = True, y = True, alpha = 0.3)
+    
+                # F.showGrid(x = True, y = True, alpha = 0.3)
+                # self.gridLayout.addWidget(F, 0, 0)
+                # F.plot(x,y, pen=pg.mkPen(color=(181, 196, 177),width=2))
+                # F.showAxis('right')
+                # F.showAxis('top')
+                # F.showGrid(x=True, y=True)  # 设置网格
                 # # F.show()
                 
                 # F = pg.GraphicsLayoutWidget(show=True)
@@ -2079,8 +2075,8 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = mwindow()
-    w.setWindowTitle("DP developed by Dr. SONG")
-    w.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+    # w.setWindowTitle("DP developed by Dr. SONG")
+    # w.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
 
     w.Files.clicked.connect(w.fileClicked)
     w.Channels.clicked.connect(w.channelClicked)

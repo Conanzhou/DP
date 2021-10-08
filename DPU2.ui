@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>990</width>
-    <height>499</height>
+    <width>1920</width>
+    <height>1080</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,12 +20,15 @@
    <enum>Qt::DefaultContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>DP modified by QYxYZ</string>
+   <string>Data Analysis Pro modified by QYxYZ</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">background-color: rgb(199, 237, 204);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(199, 237, 204);</string>
+   </property>
    <layout class="QGridLayout" name="gridLayout_2">
     <property name="leftMargin">
      <number>0</number>
@@ -79,7 +82,7 @@
            <number>1</number>
           </property>
           <item row="2" column="5">
-           <widget class="QPushButton" name="Sort">
+           <widget class="QPushButton" name="sort">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>2</horstretch>
@@ -208,6 +211,9 @@
             <property name="styleSheet">
              <string notr="true">background-color: rgb(199, 237, 204);</string>
             </property>
+            <property name="maximum">
+             <number>99999</number>
+            </property>
            </widget>
           </item>
           <item row="1" column="2">
@@ -222,7 +228,7 @@
              <string notr="true">background-color: rgb(199, 237, 204);</string>
             </property>
             <property name="text">
-             <string>updata</string>
+             <string>update</string>
             </property>
            </widget>
           </item>
@@ -347,19 +353,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="pushButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="2">
            <widget class="QLineEdit" name="chnlPattern">
             <property name="sizePolicy">
@@ -383,7 +376,7 @@
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>12</horstretch>
-            <verstretch>7</verstretch>
+            <verstretch>6</verstretch>
            </sizepolicy>
           </property>
           <property name="styleSheet">
@@ -392,29 +385,32 @@
          </widget>
         </item>
         <item>
-         <widget class="QGraphicsView" name="groupBox">
+         <widget class="PlotWidget" name="graphicsView">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>12</horstretch>
-            <verstretch>8</verstretch>
+            <horstretch>0</horstretch>
+            <verstretch>9</verstretch>
            </sizepolicy>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(199, 237, 204);</string>
+          </property>
+          <property name="showAxes" stdset="0">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,17">
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0">
         <property name="spacing">
          <number>0</number>
         </property>
         <item alignment="Qt::AlignHCenter">
          <widget class="QLabel" name="LabelFiles">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>4</horstretch>
             <verstretch>1</verstretch>
            </sizepolicy>
@@ -428,25 +424,19 @@
          </widget>
         </item>
         <item>
-         <widget class="QListView" name="Files">
+         <widget class="QListWidget" name="Files">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>4</horstretch>
+            <horstretch>0</horstretch>
             <verstretch>17</verstretch>
            </sizepolicy>
-          </property>
-          <property name="autoFillBackground">
-           <bool>true</bool>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(199, 237, 204);</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,17">
+       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -467,22 +457,19 @@
          </widget>
         </item>
         <item>
-         <widget class="QListView" name="Curves">
+         <widget class="QListWidget" name="Curves">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>4</horstretch>
+            <horstretch>0</horstretch>
             <verstretch>17</verstretch>
            </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(199, 237, 204);</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,17">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -503,15 +490,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QListView" name="Channels">
+         <widget class="QListWidget" name="Channels">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>4</horstretch>
+            <horstretch>0</horstretch>
             <verstretch>17</verstretch>
            </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(199, 237, 204);</string>
           </property>
          </widget>
         </item>
@@ -526,7 +510,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>990</width>
+     <width>1920</width>
      <height>22</height>
     </rect>
    </property>
@@ -634,6 +618,30 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionsetSystemName</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>539</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
