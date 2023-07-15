@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
 import os
 import struct as st
-import InfDas
+# import InfDas
+from .InfDas import InfDas
 import numpy as np
 from scipy import interpolate
 
@@ -52,6 +53,7 @@ class DataDasN:
             myFrq = myFrq0
             mySys = ''
 
+            myStep0 = 1
             if len(args) == 1:
                 mySys = args[0]
             elif len(args) == 2:
@@ -61,15 +63,16 @@ class DataDasN:
             elif len(args) == 3:
                 myStart = args[0]
                 myEnd = args[1]
-                myFrq = args[2]
+                myStep0 = args[2]
 
             elif len(args) == 4:
                 myStart = args[0]
                 myEnd = args[1]
-                myFrq = args[2]
+                myStep0 = args[2]
             #   mySys = args[3]
             else:
                 print("check you argument")
+            myFrq = myFrq / myStep0
 
             iStep = 1 / myInf.Freq  # swip use ms as the nature time unit
             #  the unit of myInf.Dly is what?
@@ -91,7 +94,7 @@ class DataDasN:
 
             # try to get the real x (time window)
             if type(myFrq) is int or type(myFrq) is float:
-                myStep = myFrq
+                myStep = 1 / myFrq
             elif type(myFrq) == str:
                 if myFrq[-1].isalpha():
                     if myFrq[-2].isalpha():

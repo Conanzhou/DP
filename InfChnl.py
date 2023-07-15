@@ -39,6 +39,7 @@ class InfChnls:
 
                 chnl = content[:indexEnd].decode('gbk')
                 # channel conditionnig
+                chnl = re.sub(r'-', r'_', chnl)
                 name = re.sub('\W', '', chnl)
                 chnlNames.append(name)
 

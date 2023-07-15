@@ -2,7 +2,8 @@
 import os
 import struct as st
 import re
-import InfDas
+# import InfDas
+from .InfDas import InfDas
 
 
 
@@ -49,7 +50,7 @@ class InfDasN:
             infFile.seek(offset)
             content = infFile.read(chnllen)  # one channel length is 122
             infFile.close()
-            return InfDas.InfDas(content)
+            return InfDas(content)
         else:
             print("no this file")
             return -1

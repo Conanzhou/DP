@@ -1,49 +1,99 @@
- Volume in drive \\hl\2adas is 2ADAS
- Volume Serial Number is AA34-2A0A
-
- Directory of \\hl\2adas\60000\INF
-
-2021/10/08  10:49             1,952 60195BLV.INF
-2021/10/08  10:50            11,468 60195CS1.INF
-2021/10/08  10:49            11,712 60195CTS.INF
-2021/10/08  15:48               122 60195DNP.INF
-2021/10/08  10:50             4,636 60195EM1.INF
-2021/10/08  10:50             2,440 60195EN5.INF
-2021/10/08  10:50            11,102 60195ENG.INF
-2021/10/08  10:50            12,200 60195ENL.INF
-2021/10/08  10:50             1,830 60195IH4.INF
-2021/10/08  10:50            11,468 60195LCC.INF
-2021/10/08  10:48            23,058 60195LFB.INF
-2021/10/08  10:50             3,050 60195MMD.INF
-2021/10/08  10:51             4,270 60195NB4.INF
-2021/10/08  10:50             2,928 60195NFC.INF
-2021/10/08  10:50               732 60195OFC.INF
-2021/10/08  10:52               122 60195pec.inf
-2021/10/08  10:50             6,832 60195PF1.INF
-2021/10/08  10:50             6,344 60195PF2.INF
-2021/10/08  10:50             6,344 60195PF3.INF
-2021/10/08  10:50             8,296 60195PF8.INF
-2021/10/08  10:48             1,952 60195PMD.INF
-2021/10/08  10:48             1,952 60195PME.INF
-2021/10/08  10:50            10,248 60195POA.INF
-2021/10/08  10:50             3,416 60195POD.INF
-2021/10/08  10:50             1,464 60195POE.INF
-2021/10/08  10:50             3,538 60195POG.INF
-2021/10/08  10:50             2,318 60195PRI.INF
-2021/10/08  10:50             1,586 60195PSE.INF
-2021/10/08  10:50             5,246 60195PSF.INF
-2021/10/08  10:50             3,660 60195PSG.INF
-2021/10/08  10:50             3,660 60195PSN.INF
-2021/10/08  10:50             1,708 60195PSO.INF
-2021/10/08  10:50             4,392 60195PSP.INF
-2021/10/08  10:49             1,464 60195PSR.INF
-2021/10/08  10:50             1,586 60195RMP.INF
-2021/10/08  10:50             5,978 60195TCQ.INF
-2021/10/08  10:50            10,370 60195TF1.INF
-2021/10/08  10:50               244 60195TLS.inf
-2021/10/08  11:05               244 60195TO4.INF
-2021/10/08  10:50             3,782 60195TZQ.INF
-2021/10/08  10:50               366 60195TZR.INF
-2021/10/08  10:48               864 60195vec.inf
-              42 File(s)        200,944 bytes
-               0 Dir(s)  4,273,023,451,136 bytes free
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963BES.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963BLM.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963CCS.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963CS1.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963DIV.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963DOP.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECF.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECI.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECJ.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECM.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECP.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECQ.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECS.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECY.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ECZ.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EEF.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EEI.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EM0.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EM8.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EMD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ENG.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ENL.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EPA.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EPB.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963EPC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963FBC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963FUV.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963HC2.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963HC3.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963HFC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963HFD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963HXC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IF2.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IF3.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IFA.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IFB.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IFC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IFD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IH1.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IH2.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963IH5.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963LER.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963LFB.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963LHQ.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963LHS.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963LHT.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MDR.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MGD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MGE.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MIF.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MIR.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MMD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MSS.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963MST.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NB1.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NB2.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NB4.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NBG.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NE1.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NE2.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NE3.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NFC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963NT1.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963OFB.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963OFC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963OFD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963OFE.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963pec.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963plh.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PMC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963POA.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963POB.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963POC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963POD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963POE.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963POF.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963POG.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PRI.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSA.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSB.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSD.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSE.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSF.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSG.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSO.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963PSP.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963REA.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963RED.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963RMP.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963SX4.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963SXR.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963TF1.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963TMP.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963TZQ.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963TZR.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963VAX.inf
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963VEC.INF
+/home/darkest/ExpDataBase/2ADAS/36800/INF/36963ZDA.INF

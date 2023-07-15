@@ -1032,7 +1032,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.mode = int(sys.argv[1])
         else:
             # note:change machine
-            self.mode = 0
+            self.mode = 1
 
 
         # desktop = QtWidgets.QApplication.desktop().availableGeometry()
@@ -1838,6 +1838,7 @@ class mwindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     #           elif showInfMode == 0:
             else:
                 if self.mode <2:
+                    # TODO:实现降采样
                     x, y, U = DPI.hl2adb(currentShot, channelName)
                 elif self.mode==2:
                     x, y, U = DPI.exl50db(currentShot, channelName, timeContext)

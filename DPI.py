@@ -3,9 +3,12 @@
 # manual mode, 1=set mode, 2 =run
 
 # from MDSplus import *
-import InfDasN
-import DataDasN
-import InfChnl
+# import InfDasN
+# import DataDasN
+# import InfChnl
+from .InfDasN import InfDasN
+from .DataDasN import DataDasN
+from .InfChnl import InfChnls
 import os
 import re
 import sys
@@ -24,7 +27,9 @@ __all__ = ["exl50db", "hl2adb", "eastdb", "getChannelsInTree", "sct", "sctAD", "
 
 # note: change machine
 mode = 1  # 0=driver mode   0=hl2a,1=local, 2=exl50,3=east,4=hl2m
-localdriver = Path.cwd() / "data"
+# localdriver = Path.cwd() / "data"
+localdriver = Path('/home/darkest/ExpDataBase/2ADAS/')
+# localdriver = Path('/home/darkest/ExpDataBase/2MDAS/')
 myStart = 0  # time window start
 myEnd = 10000  # time window end in second
 myFrq = 1  # interpolation or frequency
@@ -351,7 +356,7 @@ def hl2adbSU(shotNumber, channelName):
     mySys = getSystemName(channelName)
 
     InfFileName = getInfFileName(shotNumber, mySys)
-    infchs = InfChnl.InfChnls(InfFileName)
+    infchs = InfChnls(InfFileName)
     cns = infchs.getChnls
     if len(str(cns)) < 5:  # None
         print("shot: %d has no this %s " % (shotNumber, channelName))
@@ -359,7 +364,7 @@ def hl2adbSU(shotNumber, channelName):
     else:
         ChnlIndex = getChnlIndex(cns, channelName)
         if ChnlIndex > -1:
-            myInfDas = InfDasN.InfDasN(InfFileName)
+            myInfDas = InfDasN(InfFileName)
             myInf = myInfDas.getInfDas(ChnlIndex)
             myUnit = myInf.Unit
         else:
@@ -378,13 +383,13 @@ def getInf(shotNumber, channelName, *args):
             mySys = getSystemName(channelName)
 
         InfFileName = getInfFileName(shotNumber, mySys)
-        infchs = InfChnl.InfChnls(InfFileName)
+        infchs = InfChnls(InfFileName)
 
         cns = infchs.getChnls
         ChnlIndex = getChnlIndex(cns, channelName)
 
         if ChnlIndex > -1:
-            myInfDas = InfDasN.InfDasN(InfFileName)
+            myInfDas = InfDasN(InfFileName)
             myInf = myInfDas.getInfDas(ChnlIndex)
 
     except:
@@ -396,8 +401,16 @@ def getInf(shotNumber, channelName, *args):
 
 
 def hl2adb(shotNumber, channelName, *args):
-    global myStart, myEnd, myFrq
+    # TODO:实现降采样
+    global myStart, myEnd, myStep
     mySys = getSystemName(channelName)
+    if mySys==[]:
+        setSystemName(shotNumber)
+        mySys = getSystemName(channelName)
+    else:
+        pass
+
+    myStep = 1
 
     if len(args) == 1:
         mySys = args[0]
@@ -407,17 +420,17 @@ def hl2adb(shotNumber, channelName, *args):
     elif len(args) == 3:
         myStart = args[0]
         myEnd = args[1]
-        myFrq = args[2]
+        myStep = args[2]
     elif len(args) == 4:
         myStart = args[0]
         myEnd = args[1]
-        myFrq = args[2]
+        myStep = args[2]
         mySys = args[3]
     else:
         pass
 
     InfFileName = getInfFileName(shotNumber, mySys)
-    infchs = InfChnl.InfChnls(InfFileName)
+    infchs = InfChnls(InfFileName)
     cns = infchs.getChnls
     if len(str(cns)) < 5:  # None
         print("shot: %d has no this %s " % (shotNumber, channelName))
@@ -427,8 +440,13 @@ def hl2adb(shotNumber, channelName, *args):
         return x, y
     ChnlIndex = getChnlIndex(cns, channelName)
     if ChnlIndex > -1:
-        myInfDas = InfDasN.InfDasN(InfFileName)
+        myInfDas = InfDasN(InfFileName)
         myInf = myInfDas.getInfDas(ChnlIndex)
+
+        # 20230329, 解决hl2adb单独使用的问题，导致UI显示不对
+        # print(myInf.Freq)
+        myFrq = myInf.Freq / myStep
+        # print(myFrq)
 
         pattern = re.compile(r'(\.[iI][nN][fF])')
         DataFileName = re.sub(pattern, r'.DAT', InfFileName)
@@ -437,7 +455,7 @@ def hl2adb(shotNumber, channelName, *args):
         DataFileName = re.sub(pattern, r'DATA', DataFileName)
         # DataFileName = 'C:\\das\\80000\\DATA\\80030vol.DAT'
 
-        myData = DataDasN.DataDasN(DataFileName, myStart, myEnd, myFrq)
+        myData = DataDasN(DataFileName, myStart, myEnd, myInf.Freq)
         x, y = myData.getMycurve(myInf, *args)
         U = myInf.Unit
 
@@ -447,7 +465,7 @@ def hl2adb(shotNumber, channelName, *args):
         y = 0
         U = 'au'
 
-    return x, y, U   # s->s
+    return 1000*x, y, U   # s->s
 
 
 def hl2adbN(shotNumber, channelNameN, *args):  # output arguments are 4 with chnlNames
@@ -460,7 +478,7 @@ def hl2adbN(shotNumber, channelNameN, *args):  # output arguments are 4 with chn
         mySys = getSystemName(channelNameN[0])
 
     InfFileName = getInfFileName(shotNumber, mySys)
-    infchs = InfChnl.InfChnls(InfFileName)
+    infchs = InfChnls(InfFileName)
     cns = infchs.getChnls
     if len(str(cns)) < 5:  # None
         print("shot: %d has no this %s " % (shotNumber, channelNameN))
@@ -484,14 +502,14 @@ def hl2adbN(shotNumber, channelNameN, *args):  # output arguments are 4 with chn
     pattern = re.compile(r'([iI][nN][fF])')
     DataFileName = re.sub(pattern, r'DATA', DataFileName)
 
-    myInfDas = InfDasN.InfDasN(InfFileName)
+    myInfDas = InfDasN(InfFileName)
     myInfs = myInfDas.getInfDasN(ChnlIndexN)
 
     UnitN = []  # output the Unit
     for myInf in myInfs:
         UnitN.append(myInf.Unit)
 
-    myData = DataDasN.DataDasN(
+    myData = DataDasN(
         DataFileName, myStart, myEnd, myFrq)  # initialize the class
     x, yN = myData.getMycurveN(myInfs, *args)
 
@@ -549,7 +567,10 @@ def getDriver():
     if mode == 0:
         # myDriver = '\\\\hl\\2adas'
         # myDriver = Path("\\") / "hl" / "2adas"
-        myDriver = Path(r'\\hl\2adas')
+        # myDriver = Path(r'\\hl\2adas')
+        myDriver = Path(r'/home/darkest/ExpDataBase/2ADAS/')
+        # myDriver = Path(r'/home/darkest/ExpDataBase/2MDAS/')
+
         if not (os.path.exists(myDriver)):
             user = input("请输入用户名：")
             psw = input("请输入用户密码：")
@@ -567,7 +588,8 @@ def getDriver():
 
     if mode == 4:
         # myDriver = '\\\\hl\\2mdas'
-        myDriver = Path(r'\\hl\2mdas')
+        # myDriver = Path(r'\\hl\2mdas')
+        myDriver = Path(r'/home/darkest/ExpDataBase/2MDAS/')
         if not (os.path.exists(myDriver)):
             user = input("请输入用户名：")
             psw = input("请输入用户密码：")
@@ -624,6 +646,8 @@ def setSystemName(myShot):
     myShotName = '00000' + str(myShot)
     myShotName = myShotName[-5:]  # should be five character
     # myInfDirFiles = getDriver() + '\\' + myDir + '\\INF\\' + myShotName + '* '
+
+    """
     myInfDirFiles = getDriver() / myDir / "INF" / (myShotName + '* ')
 
     # TODO: linux/win 兼容命令行
@@ -636,13 +660,26 @@ def setSystemName(myShot):
     pattern = re.compile(r'\d{5}([a-zA-Z]{3}).[iI][nN][fF]')
     systemNames = pattern.findall(chnl_sys)
     strSystemChnl = ''
+    """
+    myInfDirFiles = getDriver() / myDir / "INF"
+    systemNames = [f.stem[-3:] for f in Path(myInfDirFiles).glob(myShotName + '*.[iI][nN][fF]')]
+    strSystemChnl = ''
+
     for i in range(len(systemNames)):
         if systemNames[i].lower() == 'vec':
             continue
+        elif systemNames[i].lower() == 'cps':
+            strSystemChnl = strSystemChnl + systemNames[i] + ':\n'
+            InfFileName = getInfFileName(myShot, systemNames[i])
+            infchs = InfChnls(InfFileName)
+            chnls = infchs.getChnls
+            for chnl in chnls:
+                strSystemChnl = strSystemChnl + ';' + chnl + ';\n'
+            
         else:
             strSystemChnl = strSystemChnl + systemNames[i] + ':\n'
             InfFileName = getInfFileName(myShot, systemNames[i])
-            infchs = InfChnl.InfChnls(InfFileName)
+            infchs = InfChnls(InfFileName)
             chnls = infchs.getChnls
             for chnl in chnls:
                 strSystemChnl = strSystemChnl + ';' + chnl + ';\n'
@@ -650,15 +687,15 @@ def setSystemName(myShot):
     if mode == 0:
         # SystemChnlFile = os.path.join(
         #     os.getcwd(), 'machine\\systemNameFile0.txt')
-        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile0.txt"
+        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile0.txt"
     elif mode == 1:
         # SystemChnlFile = os.path.join(
         #     os.getcwd(), 'machine\\systemNameFile1.txt')
-        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile1.txt"
+        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile1.txt"
     elif mode == 4:
         # SystemChnlFile = os.path.join(
         #     os.getcwd(), 'machine\\systemNameFile4.txt')
-        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile4.txt"
+        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile4.txt"
 
     systemNameFile = open(str(SystemChnlFile), 'w')
     n = systemNameFile.writelines(strSystemChnl)
@@ -669,23 +706,24 @@ def getSystemName(channelName):
 
     if mode == 2:
         # treeChnlFile = os.path.join(os.getcwd(), 'machine\\exl50.mat')
-        treeChnlFile = Path.cwd() / "machine" / "exl50.mat"
+        treeChnlFile = Path(__file__).parent / "machine" / "exl50.mat"
     elif mode == 3:
         # treeChnlFile = os.path.join(os.getcwd(), 'machine\\east.mat')
-        treeChnlFile = Path.cwd() / "machine" / "east.mat"
+        treeChnlFile = Path(__file__).parent / "machine" / "east.mat"
 
     if mode == 0:
         # SystemChnlFile = os.path.join(
         #     os.getcwd(), 'machine\\systemNameFile0.txt')
-        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile0.txt"
+        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile0.txt"
     elif mode == 1:
         # SystemChnlFile = os.path.join(
         #     os.getcwd(), 'machine\\systemNameFile0.txt')
-        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile1.txt"
+        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile1.txt"
     elif mode == 4:
         # SystemChnlFile = os.path.join(
         #     os.getcwd(), 'machine\\systemNameFile0.txt')
-        SystemChnlFile = Path.cwd() / "machine" / "systemNameFile4.txt"
+        # SystemChnlFile = Path.cwd() / "machine" / "systemNameFile4.txt"
+        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile4.txt"
 
     chnl_sysFile = open(SystemChnlFile, 'r')
     chnl_sys = chnl_sysFile.read()
