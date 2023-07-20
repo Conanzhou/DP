@@ -106,15 +106,27 @@ class Signal():
 class complexSignal():
 
     """Represents a discrete-time waveform.
-
+    Attributes:
+        Device (str): 设备类型，可选值为 'HL-2A'、'HL-2M' 和其他。
+        shotNum (int): 测量编号。
+        chl_I (str): I 通道名称。
+        chl_Q (str): Q 通道名称。
+        framerate_k (int): 每秒的采样数（取整）。
+        framerate (int): 每秒的采样数（取整）。
+        ts (ndarray): 时间数组。
+        ys (ndarray): 波形数组，形状为（N,）。
     """
 
     def __init__(self, shotNum, channelList, ts_s=100, ts_e=1500, step=1, Device = 'HL-2M'):
         """Initializes the wave.segment = wave4.segment(start=1.15, duration=0.85)
 
-        ys: wave array
-        ts: array of times
-        framerate: samples per second
+        Args:
+            shotNum (int): 测量编号。
+            channelList (list): 通道列表，其中第一个元素为 I 通道名称，第二个元素为 Q 通道名称。
+            ts_s (int): 查询时间范围的起始时间（默认为 100）。
+            ts_e (int): 查询时间范围的结束时间（默认为 1500）。
+            step (int): 查询时间步长（默认为 1）。
+            Device (str): 设备类型，可选值为 'HL-2A'、'HL-2M' 和其他（默认为 'HL-2M'）。
         """
         # 0=driver mode   0=hl2a,1=local, 2=exl50,3=east,4=hl2m
         if Device == 'HL-2A':
@@ -125,12 +137,32 @@ class complexSignal():
             changeDriver(1)
         self.Device = Device
         self.shotNum = shotNum
-        self.chl_I = channelList[0]
-        self.chl_Q = channelList[1]
-        ts1, y1, U = hldb(shotNum,channelList[0], ts_s/1e3, ts_e/1e3,step)
-        ts2, y2, U = hldb(shotNum,channelList[1], ts_s/1e3, ts_e/1e3,step)
 
-        self.ys = np.asanyarray(y1+y2*1J)
+        if len(channelList) == 1:
+            self.chl_I = channelList[0]
+            ts1, y1, U = hldb(shotNum,channelList[0], ts_s/1e3, ts_e/1e3,step)
+            self.ys = np.asarray(y1)  # 输出为实数
+            is_complex = False
+        elif len(channelList) == 2:
+
+            self.chl_I = channelList[0]
+            self.chl_Q = channelList[1]
+            ts1, y1, U = hldb(shotNum,channelList[0], ts_s/1e3, ts_e/1e3,step)
+            ts2, y2, U = hldb(shotNum,channelList[1], ts_s/1e3, ts_e/1e3,step)
+            self.ys = np.asarray(y1) + np.asarray(y2) * 1j  # 合成复数
+            is_complex = True
+        else:
+            # 在这里可以添加适当的错误处理代码，例如引发一个异常或给出默认行为
+            pass
+
+        # self.chl_I = channelList[0]
+        # self.chl_Q = channelList[1]
+        # ts1, y1, U = hldb(shotNum,channelList[0], ts_s/1e3, ts_e/1e3,step)
+        # ts2, y2, U = hldb(shotNum,channelList[1], ts_s/1e3, ts_e/1e3,step)
+        # self.ys = np.asanyarray(y1+y2*1J)
+
+        # 添加一个标志来记录是实信号还是复信号
+        self.is_complex = is_complex
         self.framerate_k =  round(1/(ts1[1]-ts1[0]))
         self.framerate = round(1e3/(ts1[1]-ts1[0]))
         self.ts = np.asanyarray(ts1)
@@ -226,21 +258,35 @@ class complexSignal():
             xfactor = 1
         return xfactor
     
-    def plot(self, **options):
-        """Plots the wave.
+    def plot(self,label=None,ylabel=None, **options):
+        """
+        绘制波形图。
 
-        If the ys are complex, plots the real part.
+        参数：
+            label:str,可选
+                曲线的标签。如果未提供，则默认使用输入信号的通道 I 标签作为曲线标签。
+            ylabel:str,可选
+                Y 轴的标签。如果未提供，则默认为 'Amp(a.u.)'。
+            **options:dict
+                其他用于绘图的选项参数。
 
+        如果输入信号的 ys 是复数，则会同时绘制实部和虚部曲线。
         """
         xfactor = self.get_xfactor(options)
         # TODO:
-        # if isinstance(self.ys,complex):
-        plt.plot(self.ts * xfactor, np.real(self.ys), label=self.chl_I, **options)
-        plt.plot(self.ts * xfactor, np.imag(self.ys), label=self.chl_Q, **options)
+        if np.iscomplexobj(self.ys):  # 检查 self.ys 是否为复数
+            # 如果 ys 是复数，绘制实部和虚部曲线
+            real_label = label or (self.chl_I + " (Real)")
+            imag_label = label or (self.chl_Q + " (Imaginary)")
+            plt.plot(self.ts * xfactor, np.real(self.ys), label=real_label, **options)
+            plt.plot(self.ts * xfactor, np.imag(self.ys), label=imag_label, **options)
+        else:
+            # 如果 ys 不是复数，只绘制实部曲线
+            real_label = label or self.chl_I 
+            plt.plot(self.ts * xfactor, self.ys, label=real_label, **options)
 
-        decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Time (ms)',ylabel='Amplitude',legend=True)
-        # else:
-            # plt.plot(self.ts * xfactor, np.real(self.ys), **options)
+        decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Time (ms)',ylabel=ylabel or 'Amp(a.u.)',legend=True)
+
     
     def spectrogram(self,para=[512*2,350*2,1024*2],isPlot=False,isDecorate=True,ylim=(-500,500),window='hamming',cmap='jet',mode='psd',scaling='density',**options):
         """
