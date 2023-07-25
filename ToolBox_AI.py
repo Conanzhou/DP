@@ -288,7 +288,7 @@ class complexSignal():
         decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Time (ms)',ylabel=ylabel or 'Amp(a.u.)',legend=True)
 
     
-    def spectrogram(self,para=[512*2,350*2,1024*2],isPlot=False,isDecorate=True,ylim=(-500,500),window='hamming',cmap='jet',mode='psd',scaling='density',**options):
+    def spectrogram(self,para=[512*2,350*2,1024*2],isPlot=False,isDecorate=True,ylim=None,window='hamming',cmap='jet',mode='psd',scaling='density',**options):
         """
         scaling : { 'density', 'spectrum' }, optional
             Selects between computing the power spectral density ('density')
@@ -304,18 +304,36 @@ class complexSignal():
             STFT. 'angle' and 'phase' return the complex angle of the STFT,
             with and without unwrapping, respectively.
         """
+        if not np.iscomplexobj(self.ys):
+            ys = self.ys.astype(complex)
+        else:
+            ys = self.ys
+
         if self.fftPara != para:
             self.fftPara = para
-            f,t,Sxx=signal.spectrogram(self.ys,fs=self.framerate,window=window,nperseg=para[0],noverlap=para[1],nfft=para[2],detrend='linear',mode=mode,scaling=scaling,return_onesided=False)
+            f,t,Sxx=signal.spectrogram(ys,fs=self.framerate,window=window,nperseg=para[0],noverlap=para[1],nfft=para[2],detrend='linear',mode=mode,scaling=scaling,return_onesided=False)
             self.spect_t = t*1e3 + self.start
             self.spect_f = fftshift(f/1e3)
             self.spect_Sxx = fftshift(Sxx, axes=0)
+            
+            if np.isrealobj(self.ys):
+                # 去除对称部分
+                # self.spect_t = self.spect_t[:len(self.spect_t)//2]
+                self.spect_f = self.spect_f[len(self.spect_f)//2:]
+                self.spect_Sxx = self.spect_Sxx[len(self.spect_f):, :]
+
+                if ylim is None:
+                    ylim = (0,self.framerate_k//2)
+            else:
+                if ylim is None:
+                    ylim = (-self.framerate_k // 2, self.framerate_k // 2)
         else:
             pass
         if isPlot is True:
             im = plt.pcolormesh(self.spect_t, self.spect_f, 10*np.log10(self.spect_Sxx), cmap=cmap, shading='auto',**options)
             plt.ylim(ylim)
             return im
+        
             if isDecorate is True:
                 decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Time (ms)',ylabel='Freq (kHz)',legend=True)
                 plt.colorbar()
@@ -517,7 +535,7 @@ class complexSignal():
             # plt.plot(smooth(self.spect_t,smoothSize),smooth(self.fd2,smoothSize),**options)
             # plt.plot(smooth(self.spect_t,smoothSize),smooth(self.fd2,smoothSize),**options)
 
-    def plot_sumpower(self,start=None, end=None,smoothSize=5,**options):
+    def plot_sumpower(self,start=None, end=None,bias=0,smoothSize=5,freqRange=None,islog=True,isplot=True,**options):
 
         n = len(self.spect_t)
         ts0 = self.ts[0]
@@ -534,12 +552,37 @@ class complexSignal():
             j = None
         else:
             j = round((n - 1) * (end - ts0) / (te0 - ts0))
-
+        
+        if freqRange is not None:
+            f = self.spect_f
+            index = np.logical_and(f>freqRange[0],f<freqRange[1])
+            Pxx0 = self.spect_Sxx[index,i:j]
+        else:
+            Pxx0 = self.spect_Sxx[...,i:j]
         
         Pxx0 = self.spect_Sxx[...,i:j]
 
         allpower = np.sum(Pxx0,axis=0)
-        plt.plot(smooth(self.spect_t,smoothSize),smooth(allpower,smoothSize),**options)
+        if islog:
+            allpower = 10 * np.log10(allpower)
+        else:
+            pass
+        if isplot:
+            plt.plot(smooth(self.spect_t,smoothSize),smooth(allpower+bias,smoothSize),**options)
+        else:
+            return allpower
+
+    def dphidt_spect(self,para=[1024,512,2048],**option):
+        if np.iscomplexobj(self.ys):
+            self.phi = np.unwrap( np.angle(self.ys))
+            self.dphidt = np.diff(self.phi) / (1 / self.framerate)
+            _ = plt.specgram(self.dphidt,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k,xextent=(self.start,self.end),**option)
+            # plt.phase_spectrum(self.ys,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k)
+
+        # decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Freq (kHz)',ylabel='Power(V^2)',legend=True)
+
+
+    
 
 
 
