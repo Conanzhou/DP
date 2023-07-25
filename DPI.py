@@ -605,15 +605,34 @@ def getDriver():
     return myDriver
 
 
+# def getInfFileName(myShot, mySys):
+#     # myDriver = getDriver()
+#     myDir = getDasDir(myShot)
+#     myShotName = '00000' + str(myShot)
+#     myShotName = myShotName[-5:]  # should be five character
+#     # myInfFileName = getDriver() + '\\' + myDir + '\\INF\\' + \
+#     #     myShotName + mySys + '.inf'
+#     myInfFileName = getDriver() / myDir / "INF" / (myShotName + mySys + '.inf')
+#     return str(myInfFileName)
+
 def getInfFileName(myShot, mySys):
-    # myDriver = getDriver()
     myDir = getDasDir(myShot)
     myShotName = '00000' + str(myShot)
     myShotName = myShotName[-5:]  # should be five character
-    # myInfFileName = getDriver() + '\\' + myDir + '\\INF\\' + \
-    #     myShotName + mySys + '.inf'
-    myInfFileName = getDriver() / myDir / "INF" / (myShotName + mySys + '.inf')
-    return str(myInfFileName)
+
+    # Construct directory path
+    inf_dir = getDriver() / myDir / "INF"
+    
+    # Construct file prefix
+    file_prefix = myShotName + mySys
+
+    # Search for the .inf file (case-insensitive)
+    for inf_file in inf_dir.glob(f"{file_prefix}.*"):
+        # Check if the file extension is .inf (case-insensitive)
+        if inf_file.suffix.lower() == '.inf':
+            return str(inf_file)
+
+    # If no matching .inf file is found, return None or raise an error
 
 
 def isMachineReady(machine):
@@ -704,33 +723,24 @@ def setSystemName(myShot):
 
 def getSystemName(channelName):
 
-    if mode == 2:
-        # treeChnlFile = os.path.join(os.getcwd(), 'machine\\exl50.mat')
-        treeChnlFile = Path(__file__).parent / "machine" / "exl50.mat"
-    elif mode == 3:
-        # treeChnlFile = os.path.join(os.getcwd(), 'machine\\east.mat')
-        treeChnlFile = Path(__file__).parent / "machine" / "east.mat"
+    # Choosing file based on mode
+    machine_dir = Path(__file__).parent / "machine"
 
-    if mode == 0:
-        # SystemChnlFile = os.path.join(
-        #     os.getcwd(), 'machine\\systemNameFile0.txt')
-        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile0.txt"
-    elif mode == 1:
-        # SystemChnlFile = os.path.join(
-        #     os.getcwd(), 'machine\\systemNameFile0.txt')
-        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile1.txt"
-    elif mode == 4:
-        # SystemChnlFile = os.path.join(
-        #     os.getcwd(), 'machine\\systemNameFile0.txt')
-        # SystemChnlFile = Path.cwd() / "machine" / "systemNameFile4.txt"
-        SystemChnlFile = Path(__file__).parent / "machine" / "systemNameFile4.txt"
+    if mode in [2, 3]:
+        treeChnlFileName = "exl50.mat" if mode == 2 else "east.mat"
+        treeChnlFile = machine_dir / treeChnlFileName
+    if mode in [0, 1, 4]:
+        SystemChnlFileName = f"systemNameFile{mode}.txt"
+        SystemChnlFile = machine_dir / SystemChnlFileName
 
-    chnl_sysFile = open(SystemChnlFile, 'r')
-    chnl_sys = chnl_sysFile.read()
-    chnl_sysFile.close()
+    # Read from system channel file
+    with open(SystemChnlFile, 'r') as chnl_sysFile:
+        chnl_sys = chnl_sysFile.read()
 
-    pattern = re.compile(';' + channelName + ';', re.I)
+    pattern = re.compile(f';{channelName};', re.I)
     mObj = pattern.search(chnl_sys)
+
+    # 替换
     if len(str(mObj)) < 5:  # no chnl find
         mySys = []
     else:
@@ -747,8 +757,29 @@ def getSystemName(channelName):
                 break
             else:
                 mySys = sysList[i]
-
     return mySys[:3]
+
+
+    # if mObj is None:  # no channel found
+    #     return []
+
+    # myString = mObj.group()
+    # myStart = mObj.start()
+    
+    # pattern = re.compile('([a-zA-Z]{3}:)')
+    # sysList = pattern.findall(chnl_sys)
+
+    # mySys = None
+    # for sys in sysList:
+    #     if re.search(sys, chnl_sys).start() > myStart:
+    #         mySys = sys
+    #         break
+    # # If all goes well
+    # if mySys is not None:
+    #     return mySys[:3]
+    
+    # raise ValueError(f"No system matching '{channelName}' found.")
+    
 
 
 def getTreeName(channelName):
