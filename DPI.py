@@ -687,7 +687,7 @@ def setSystemName(myShot):
     for i in range(len(systemNames)):
         if systemNames[i].lower() == 'vec':
             continue
-        elif systemNames[i].lower() == 'cps':
+        elif systemNames[i].lower() == 'SX5':
             strSystemChnl = strSystemChnl + systemNames[i] + ':\n'
             InfFileName = getInfFileName(myShot, systemNames[i])
             infchs = InfChnls(InfFileName)
@@ -696,12 +696,15 @@ def setSystemName(myShot):
                 strSystemChnl = strSystemChnl + ';' + chnl + ';\n'
             
         else:
-            strSystemChnl = strSystemChnl + systemNames[i] + ':\n'
-            InfFileName = getInfFileName(myShot, systemNames[i])
-            infchs = InfChnls(InfFileName)
-            chnls = infchs.getChnls
-            for chnl in chnls:
-                strSystemChnl = strSystemChnl + ';' + chnl + ';\n'
+            try:
+                strSystemChnl = strSystemChnl + systemNames[i] + ':\n'
+                InfFileName = getInfFileName(myShot, systemNames[i])
+                infchs = InfChnls(InfFileName)
+                chnls = infchs.getChnls
+                for chnl in chnls:
+                    strSystemChnl = strSystemChnl + ';' + chnl + ';\n'
+            except:
+                print('no' + systemNames[i])
 
     if mode == 0:
         # SystemChnlFile = os.path.join(
@@ -746,7 +749,8 @@ def getSystemName(channelName):
     else:
         myString = mObj.group()
         myStart = mObj.start()
-        pattern = re.compile('([a-zA-Z]{3}:)')
+        # pattern = re.compile('([a-zA-Z]{3}:)')
+        pattern = re.compile('([a-zA-Z]{3}:|[a-zA-Z]{2}[0-9]:)')
         sysList = pattern.findall(chnl_sys)
         for i in range(0, len(sysList)):
             pattern = re.compile(sysList[i])

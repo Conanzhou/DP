@@ -117,7 +117,7 @@ class complexSignal():
         ys (ndarray): 波形数组，形状为（N,）。
     """
 
-    def __init__(self, shotNum, channelList, ts_s=100, ts_e=1500, step=1, Device = 'HL-2M'):
+    def __init__(self, shotNum, channelList, ts_s=100, ts_e=1500, step=1, Device = 'HL-2M',detrend=True):
         """Initializes the wave.segment = wave4.segment(start=1.15, duration=0.85)
 
         Args:
@@ -147,8 +147,18 @@ class complexSignal():
 
             self.chl_I = channelList[0]
             self.chl_Q = channelList[1]
+
             ts1, y1, U = hldb(shotNum,channelList[0], ts_s/1e3, ts_e/1e3,step)
             ts2, y2, U = hldb(shotNum,channelList[1], ts_s/1e3, ts_e/1e3,step)
+            if detrend:
+                # Remove DC bias from y1 and y2 by taking the mean from -100ms to 0ms
+                _,dc_bias_y1,_ = hldb(shotNum,channelList[0], -100/1e3, 0/1e3,step)
+                _,dc_bias_y2,_ = hldb(shotNum,channelList[1], -100/1e3, 0/1e3,step)
+                y1 -= np.mean(dc_bias_y1)
+                y2 -= np.mean(dc_bias_y2)
+                y1 = (y1-np.min(y1))/(np.max(y1)-np.min(y1))
+                y2 = (y2-np.min(y2))/(np.max(y2)-np.min(y2))
+
             self.ys = np.asarray(y1) + np.asarray(y2) * 1j  # 合成复数
             is_complex = True
         else:
@@ -258,7 +268,7 @@ class complexSignal():
             xfactor = 1
         return xfactor
     
-    def plot(self,label=None,ylabel=None, **options):
+    def plot(self,label=None,ylabel=None,isDecorate=True,yfactor=1, **options):
         """
         绘制波形图。
 
@@ -272,23 +282,23 @@ class complexSignal():
 
         如果输入信号的 ys 是复数，则会同时绘制实部和虚部曲线。
         """
-        xfactor = self.get_xfactor(options)
+        
         # TODO:
         if np.iscomplexobj(self.ys):  # 检查 self.ys 是否为复数
             # 如果 ys 是复数，绘制实部和虚部曲线
             real_label = label or (self.chl_I + " (Real)")
             imag_label = label or (self.chl_Q + " (Imaginary)")
-            plt.plot(self.ts * xfactor, np.real(self.ys), label=real_label, **options)
-            plt.plot(self.ts * xfactor, np.imag(self.ys), label=imag_label, **options)
+            plt.plot(self.ts , np.real(self.ys) * yfactor, label=real_label, **options)
+            plt.plot(self.ts , np.imag(self.ys) * yfactor, label=imag_label, **options)
         else:
             # 如果 ys 不是复数，只绘制实部曲线
             real_label = label or self.chl_I 
-            plt.plot(self.ts * xfactor, self.ys, label=real_label, **options)
-
-        decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Time (ms)',ylabel=ylabel or 'Amp(a.u.)',legend=True)
+            plt.plot(self.ts , self.ys * yfactor, label=real_label, **options)
+        if isDecorate is True:
+            decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Time (ms)',ylabel=ylabel or 'Amp(a.u.)',legend=True)
 
     
-    def spectrogram(self,para=[512*2,350*2,1024*2],isPlot=False,isDecorate=True,ylim=None,window='hamming',cmap='jet',mode='psd',scaling='density',**options):
+    def spectrogram(self,para=[512*2,350*2,1024*2],isPlot=False,isDecorate=True,ylim=None,colorrange=None,window='hamming',cmap='jet',mode='psd',scaling='density',**options):
         """
         scaling : { 'density', 'spectrum' }, optional
             Selects between computing the power spectral density ('density')
@@ -330,7 +340,12 @@ class complexSignal():
         else:
             pass
         if isPlot is True:
-            im = plt.pcolormesh(self.spect_t, self.spect_f, 10*np.log10(self.spect_Sxx), cmap=cmap, shading='auto',**options)
+            Pxx = 10*np.log10(self.spect_Sxx)
+            cmax = np.max(Pxx)
+            if colorrange is not None:
+                im = plt.pcolormesh(self.spect_t, self.spect_f, Pxx, cmap=cmap, shading='auto',vmin=cmax-5-colorrange,vmax=cmax-5,**options)
+            else:
+                im = plt.pcolormesh(self.spect_t, self.spect_f, Pxx, cmap=cmap, shading='auto',**options)
             plt.ylim(ylim)
             return im
         
@@ -343,7 +358,7 @@ class complexSignal():
             pass
         
 
-    def plot_power(self, start=None, end=None,xlim=(-800,800),bias=0,isPlotFlip=False,isPlotDelta=False,isPlotfd=False,label=None,smoothSize=None):
+    def plot_power(self, start=None, end=None,xlim=(-800,800),bias=0,isPlotFlip=False,isPlotDelta=False,isPlotfd=False,label=None,smoothSize=None,isDecorate=True):
         """Extracts a segment.
 
         start: float start time in microseconds
@@ -395,7 +410,8 @@ class complexSignal():
             p = plt.plot(f,10*np.log10(np.abs(Pxx-np.flip(Pxx))))
             # p = plt.plot(f,10*np.log10(np.mean(np.abs(Pxx0-np.flip(Pxx0,axis=0)),axis=1)))
         # plt.axvline(x=0,ls='--',c='black')
-        decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Freq (kHz)',ylabel='Power(V^2)',legend=True)
+        if isDecorate:
+            decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Freq (kHz)',ylabel='Power(V^2)',legend=True)
         # return self.slice(i, j)
 
     def gaussian3(self,data=None,para=[2e-8,-200,1,6e-8,200,1],isLog=True):
@@ -560,7 +576,7 @@ class complexSignal():
         else:
             Pxx0 = self.spect_Sxx[...,i:j]
         
-        Pxx0 = self.spect_Sxx[...,i:j]
+        # Pxx0 = self.spect_Sxx[...,i:j]
 
         allpower = np.sum(Pxx0,axis=0)
         if islog:
@@ -572,19 +588,182 @@ class complexSignal():
         else:
             return allpower
 
-    def dphidt_spect(self,para=[1024,512,2048],**option):
+    def dphidt_spect(self,para=[1024,512,2048],bias=0,smoothSize=5,freqRange=None,colorrange=30,islog=True,isplot=True,**option):
         if np.iscomplexobj(self.ys):
             self.phi = np.unwrap( np.angle(self.ys))
             self.dphidt = np.diff(self.phi) / (1 / self.framerate)
-            _ = plt.specgram(self.dphidt,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k,xextent=(self.start,self.end),**option)
-            # plt.phase_spectrum(self.ys,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k)
+            Sxx,f,t,im = plt.specgram(self.dphidt,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k,xextent=(self.start,self.end),**option)
 
+            t = t + self.start
+
+            self.dphidt_t = t
+            self.dphidt_f = f
+            self.dphidt_Sxx = Sxx
+
+            # plt.phase_spectrum(self.ys,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k)
+            
         # decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Freq (kHz)',ylabel='Power(V^2)',legend=True)
 
+            if freqRange is not None:
+                # f = self.spect_f
+                plt.ylim(freqRange[0],freqRange[1])
+                index = np.logical_and(f>freqRange[0],f<freqRange[1])
+                Pxx0 = Sxx[index,]
+            else:
+                Pxx0 = Sxx 
+            allpower = np.sum(Pxx0,axis=0)
+            
+            Pxx = 10*np.log10(Pxx0)
+            cmax = np.max(Pxx)
+            plt.clim(cmax-5-colorrange,cmax-5)
 
+            if isplot:
+                plt.twinx()
+                plt.plot(smooth(t,smoothSize),smooth(allpower+bias,smoothSize),**option)
+            else:
+                return allpower,t
+            return im
+    def dphidt_spect2(self,para=[1024,512,2048]):
+            if np.iscomplexobj(self.ys):
+                self.phi = np.unwrap( np.angle(self.ys))
+                self.dphidt = np.diff(self.phi) / (1 / self.framerate)
+                # Sxx,f,t,im = plt.specgram(self.dphidt,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k,xextent=(self.start,self.end),**option)
+
+                # 计算频谱图数据
+                frequencies, times, Sxx = signal.spectrogram(self.dphidt, fs=self.framerate_k, window='hann', nperseg=para[0], noverlap=para[1], nfft=para[2])
+
+                # 调整时间轴
+                times = times + self.start
+
+                self.dphidt_t = times
+                self.dphidt_f = frequencies
+                self.dphidt_Sxx = Sxx
+            
+        
+    def phi_spect(self,para=[1024,512,2048],bias=0,smoothSize=5,freqRange=None,islog=True,isplot=True,**option):
+        if np.iscomplexobj(self.ys):
+            self.phi = np.unwrap( np.angle(self.ys))
+            
+            Sxx,f,t,im = plt.specgram(self.phi,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k,xextent=(self.start,self.end),**option)
+            # plt.phase_spectrum(self.ys,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k)
+            
+        # decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Freq (kHz)',ylabel='Power(V^2)',legend=True)
+
+            if freqRange is not None:
+                # f = self.spect_f
+                index = np.logical_and(f>freqRange[0],f<freqRange[1])
+                Pxx0 = Sxx[index,]
+            else:
+                Pxx0 = Sxx 
+            allpower = np.sum(Pxx0,axis=0)
+
+            if isplot:
+                plt.plot(smooth(t,smoothSize),smooth(allpower+bias,smoothSize),**option)
+            else:
+                return allpower,t
+            return im
+
+    def A_spect(self,para=[1024,512,2048],bias=0,smoothSize=5,freqRange=None,colorrange=30,islog=True,isplot=True,**option):
+        if np.iscomplexobj(self.ys):
+            self.A = np.abs(self.ys)
+            
+            Sxx,f,t,im = plt.specgram(self.A,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k,xextent=(self.start,self.end),**option)
+
+            if freqRange is not None:
+                # f = self.spect_f
+                plt.ylim(freqRange[0],freqRange[1])
+                index = np.logical_and(f>freqRange[0],f<freqRange[1])
+                Pxx0 = Sxx[index,]
+            else:
+                Pxx0 = Sxx 
+            allpower = np.sum(Pxx0,axis=0)
+            
+            Pxx = 10*np.log10(Pxx0)
+            cmax = np.max(Pxx)
+            plt.clim(cmax-5-colorrange,cmax-5)
+
+            if isplot:
+                plt.twinx()
+                plt.plot(smooth(t,smoothSize),smooth(allpower+bias,smoothSize),**option)
+            else:
+                return allpower,t
+            return im
     
+    def iphi_spect(self,para=[1024,512,2048],bias=0,smoothSize=5,freqRange=None,islog=True,isplot=True,**option):
+        if np.iscomplexobj(self.ys):
+            self.A = np.abs(self.ys)
+            self.iphi = self.ys / self.A
+            Sxx,f,t,im = plt.specgram(self.iphi,NFFT=para[0],noverlap=para[1],pad_to=para[2],cmap='jet',Fs = self.framerate_k,xextent=(self.start,self.end),**option)
+
+            if freqRange is not None:
+                # f = self.spect_f
+                index = np.logical_and(f>freqRange[0],f<freqRange[1])
+                Pxx0 = Sxx[index,]
+            else:
+                Pxx0 = Sxx 
+            allpower = np.sum(Pxx0,axis=0)
+
+            if isplot:
+                plt.plot(smooth(t,smoothSize),smooth(allpower+bias,smoothSize),**option)
+            else:
+                return allpower,t
+            return im
+
+    def plot_dphidt_power(self, start=None, end=None,xlim=(0,100),bias=0,isPlotFlip=False,isPlotDelta=False,isPlotfd=False,label=None,smoothSize=None,isDecorate=True):
+        """Extracts a segment.
+
+        start: float start time in microseconds
+        end: float duration in microseconds
+
+        returns: Wave
+        """
+        n = len(self.dphidt_t)
+        ts0 = self.ts[0]
+        te0 = self.ts[-1]
+
+        if start is None:
+            start = ts0
+            i = 0
+        else:
+            i = round((n - 1) * (start - ts0) / (te0 - ts0))
+
+        if end is None:
+            end = te0
+            j = None
+        else:
+            j = round((n - 1) * (end - ts0) / (te0 - ts0))
+
+        
+        f = self.dphidt_f
+        Pxx0 = self.dphidt_Sxx[...,i:j]
+        Pxx = np.mean(Pxx0,axis=1)
+        # self.power_Pxx = Pxx
+        # self.power_Pxx_log = 10*np.log10(Pxx)
+        if label is None:
+            label=str(round(start,1))+'-'+str(round(end,1))+' ms'
+
+        if smoothSize is not None:
+            p = plt.plot(smooth(f,smoothSize), smooth(10*np.log10(Pxx)+bias,smoothSize),label=label)
+        else:
+            p = plt.plot(f, 10*np.log10(Pxx)+bias,label=label)
+        if isPlotFlip:
+            plt.plot(np.flip(f), 10*np.log10(Pxx),label='flip:'+label)
+        plt.xlim(xlim)
+
+        plt.axvline(x=0,ls='--')
+
+        if self.fd is not None and isPlotfd:
+            fd = np.mean(self.fd)
+            plt.axvline(x=fd,ls='--',c=p[0].get_color())
 
 
+        if isPlotDelta:
+            p = plt.plot(f,10*np.log10(np.abs(Pxx-np.flip(Pxx))))
+            # p = plt.plot(f,10*np.log10(np.mean(np.abs(Pxx0-np.flip(Pxx0,axis=0)),axis=1)))
+        # plt.axvline(x=0,ls='--',c='black')
+        if isDecorate:
+            decorate(title=self.Device+':#'+str(self.shotNum),xlabel='Freq (kHz)',ylabel='Power(V^2)',legend=True)
+        # return self.slice(i, j)
 
 
 

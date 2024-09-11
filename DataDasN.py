@@ -80,10 +80,18 @@ class DataDasN:
             iEnd = iStartTime + iStep * (myInf.Len - 1)
 
             # make sure the input value is reasonable
-            if myStart < iStartTime:
-                myStart = iStartTime
-            if myEnd > iEnd:
-                myEnd = iEnd
+            # if myStart < iStartTime:
+            #     myStart = iStartTime
+            # if myStart > iEnd:
+            #     raise ValueError(f"Time '{myStart}' s is out of range.")
+            # if myEnd > iEnd:
+            #     myEnd = iEnd 
+            myStart = max(iStartTime, min(myStart, iEnd))
+            myEnd = min(max(myEnd, iStartTime), iEnd)
+
+            if myStart >= myEnd:
+                raise ValueError("Input time range does not intersect with the valid time range.")
+            
 
             index = range(0, myInf.Len, 1)  # range([start,] stop[, step]), step=1 means original data
             indexArray = np.array(index, dtype=np.float32)
