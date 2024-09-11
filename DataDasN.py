@@ -53,8 +53,9 @@ class DataDasN:
             myFrq = myFrq0
             mySys = ''
 
-            myStep0 = 1
-            if len(args) == 1:
+            if len(args) == 0:
+                pass
+            elif len(args) == 1:
                 mySys = args[0]
             elif len(args) == 2:
                 myStart = args[0]
@@ -102,7 +103,8 @@ class DataDasN:
 
             # try to get the real x (time window)
             if type(myFrq) is int or type(myFrq) is float:
-                myStep = 1 / myFrq
+                # myStep = 1 / myFrq
+                myStep = myFrq
             elif type(myFrq) == str:
                 if myFrq[-1].isalpha():
                     if myFrq[-2].isalpha():

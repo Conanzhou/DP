@@ -30,9 +30,13 @@ mode = 1  # 0=driver mode   0=hl2a,1=local, 2=exl50,3=east,4=hl2m
 # localdriver = Path.cwd() / "data"
 localdriver = Path('/home/darkest/ExpDataBase/2ADAS/')
 # localdriver = Path('/home/darkest/ExpDataBase/2MDAS/')
+# localdriver = Path.cwd() / "data"
+localdriver = Path('/home/darkest/ExpDataBase/2ADAS/')
+# localdriver = Path('/home/darkest/ExpDataBase/2MDAS/')
 myStart = 0  # time window start
 myEnd = 10000  # time window end in second
 myFrq = 1  # interpolation or frequency
+myStep0 = 1  # interpolation or frequency
 isLocalData = 0
 
 # for local reading, you need  to set environment variable :
@@ -571,6 +575,10 @@ def getDriver():
         myDriver = Path(r'/home/darkest/ExpDataBase/2ADAS/')
         # myDriver = Path(r'/home/darkest/ExpDataBase/2MDAS/')
 
+        # myDriver = Path(r'\\hl\2adas')
+        myDriver = Path(r'/home/darkest/ExpDataBase/2ADAS/')
+        # myDriver = Path(r'/home/darkest/ExpDataBase/2MDAS/')
+
         if not (os.path.exists(myDriver)):
             user = input("请输入用户名：")
             psw = input("请输入用户密码：")
@@ -588,6 +596,8 @@ def getDriver():
 
     if mode == 4:
         # myDriver = '\\\\hl\\2mdas'
+        # myDriver = Path(r'\\hl\2mdas')
+        myDriver = Path(r'/home/darkest/ExpDataBase/2MDAS/')
         # myDriver = Path(r'\\hl\2mdas')
         myDriver = Path(r'/home/darkest/ExpDataBase/2MDAS/')
         if not (os.path.exists(myDriver)):

@@ -9,3 +9,5 @@ ts0 = 150 / 1e3
 te0 = 900 /1e3
 
 ts, y, U = hl2a(shotNum, 'Mpol_14', ts0, te0,1)
+
+dataproce=[shot IPmax Bt Nebefore NeHeating NeHeating-Nebefore Tebefore TeHeating TeHeating-Tebefore Webefore WeHeating WeHeating-Webefore tNBIstart tNBIfinish powerNBI tECRHstart tECRHfinish powerECRH tLHstart tLHfinish powerLH];
